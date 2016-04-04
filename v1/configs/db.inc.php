@@ -4,6 +4,6 @@
 define("HOST_NAME", "localhost");
 define("DATABASE_NAME", "arduino");
 define("USER", "root");
-define("PASSWORD", "");
+define("PASSWORD", "1233");
 
 ?>
