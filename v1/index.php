@@ -28,7 +28,6 @@ echo "</pre>";
 exit;*/
 
 $view = new ViewJson();
-$tech = new Technician();
 
 set_exception_handler(function ($exception) use ($view) {
     $body = array(
@@ -47,8 +46,12 @@ set_exception_handler(function ($exception) use ($view) {
 
 switch ($method) {
 	case 'get':
-		echo $view->prints(Points::get($request));
-		break;
+		if ($resource == "points") {
+			echo $view->prints(Points::get($request));
+		} else if ($resource == "technicians") {
+			echo $view->prints(Technician::get($request));
+		}
+	break;
 	case 'post':
 		$view->prints($tech::post($request));
 		break;

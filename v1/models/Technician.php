@@ -85,7 +85,7 @@ class Technician{
 	public static function getAll(){
 		try{
 			$db = new Database();
-			$sql = "SELECT * FROM technicians";
+			$sql = "SELECT * FROM ".self::TABLE_NAME;
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 
