@@ -1,13 +1,11 @@
 <?php 
 
-class Points{
-	//Dades de la taula "points"
-	const TABLE_NAME = "points";
-	const ID_POINT = "id";
-	const POINT_X = "point_x";
-	const POINT_Y = "point_y";
-	const POINT_Z = "point_z";
-	const ID_PROCESS = "id_process";
+class Process {
+	//Dades de la taula "technicians"
+	const TABLE_NAME = "process";
+	const ID_PROCESS = "id";
+	const NAME = "name";
+	const ID_TECHNICIAN = "id_technician";
 	const STATE_CREATE_SUCCESS = 201;
 	const STATE_URL_INCORRECT = 404;
 	const STATE_CREATE_FAIL = 400;
@@ -19,8 +17,6 @@ class Points{
 			return self::getAll();
 		}else if($request[0] == 'login'){
 			return self::login();
-		} else if($request[0] == 'getAllPointsByTechnician'){
-			return self::getAllPointsByTechnician($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -61,7 +57,29 @@ class Points{
 	}
 
 	public static function create($user){
-		
+		$name = $user->name;
+		$surname = $user->surname;
+		try{
+			$db = new Database();
+			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
+				self::NAME . "," .
+				self::SURNAME . ")" .
+				" VALUES(?,?)";
+
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(1, $name);
+			$stmt->bindParam(2, $surname);
+
+			$result = $stmt->execute();
+
+			if($result){
+				return self::STATE_CREATE_SUCCESS;
+			}else{
+				return self::STATE_CREATE_FAIL;
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
 	}
 
 	public static function getAll(){
@@ -82,24 +100,6 @@ class Points{
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
-
-	public static function getAllPointsByProcess($idTech){
-	try{
-		$db = new Database();
-		$sql = "SELECT * FROM ".self::TABLE_NAME . " WHERE ". self::ID_PROCESS ." = " . $idTech;
-		$stmt = $db->prepare($sql);
-		$result = $stmt->execute();
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		if($result){
-			return self::STATE_CREATE_SUCCESS;
-		}else{
-			return self::STATE_CREATE_FAIL;
-		}
-	}catch(PDOException $e){
-		throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
-	}
-}
 
 }
 
