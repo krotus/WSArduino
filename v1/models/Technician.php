@@ -6,6 +6,7 @@ class Technician{
 	const ID_TECHNICIAN = "id";
 	const NAME = "name";
 	const SURNAME = "surname";
+	const STATE_SUCCESS = 200;
 	const STATE_CREATE_SUCCESS = 201;
 	const STATE_URL_INCORRECT = 404;
 	const STATE_CREATE_FAIL = 400;
@@ -89,12 +90,14 @@ class Technician{
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 
-			return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 			if($result){
-				return self::STATE_CREATE_SUCCESS;
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
 			}else{
-				return self::STATE_CREATE_FAIL;
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
 			}
 		}catch(PDOException $e){
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
