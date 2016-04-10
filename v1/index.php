@@ -13,7 +13,7 @@ $db = new Database();
 // Obtenim el recurs a partir de la petició
 $request = explode("/", $_GET['PATH_INFO']);
 $resource = array_shift($request);
-$existing_resources = array('technicians','points');
+$existing_resources = array('process','technicians','points');
 
 // COmprovem si existeix el recurs especificat
 if(!in_array($resource, $existing_resources)){
@@ -50,6 +50,8 @@ switch ($method) {
 			echo $view->prints(Points::get($request));
 		} else if ($resource == "technicians") {
 			echo $view->prints(Technician::get($request));
+		} else if ($resource == 'process') {
+			echo $view->prints(Process::get($request));
 		}
 	break;
 	case 'post':

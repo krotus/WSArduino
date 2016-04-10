@@ -22,6 +22,18 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+ CREATE TABLE Process (
+    id INT NOT NULL AUTO_INCREMENT,
+    description VARCHAR(25) NOT NULL,
+    technicianFK INT NOT NULL,
+    directorFK INT NOT NULL,
+    FOREIGN KEY (directorFK) REFERENCES Directors(idDirector),
+    FOREIGN KEY (typeFK) REFERENCES Types(idType),
+    PRIMARY KEY (idPerformance)
+ );
+
+
+
 --
 -- Estructura de tabla para la tabla `points`
 --
