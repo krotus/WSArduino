@@ -3,7 +3,7 @@
 require_once("ViewApi.php");
 
 class ViewJson extends ViewApi{
-	public function __construct($state = 400){
+	public function __construct($state = 200){
 		$this->state = $state;
 	}
 
