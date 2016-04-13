@@ -3,6 +3,7 @@
 require("utilities/Database.php");
 require("views/ViewJson.php");
 require("models/Order.php");
+require("models/Worker.php");
 
 $db = new Database();
 
@@ -47,14 +48,14 @@ switch ($method) {
 	case 'get':
 		if ($resource == "orders") {
 			echo $view->prints(Order::get($request));
-		}else if($resource == "orders"){
+		}else if($resource == "workers"){
 			echo $view->prints(Worker::get($request));
 		}
 	break;
 	case 'post':
 		if ($resource == "orders") {
 			$view->prints(Order::post($request));
-		}else if($resource == "orders"){
+		}else if($resource == "workers"){
 			$view->prints(Worker::post($request));
 		}
 		break;
