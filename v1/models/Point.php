@@ -1,16 +1,13 @@
 <?php 
 
-class Order{
-	//Camps de la taula "orders"
-	const TABLE_NAME = "orders";
+class Point{
+	//Camps de la taula "points"
+	const TABLE_NAME = "points";
 	const ID = "id";
-	const CODE = "code";
-	const DESCRIPTION = "description";
-	const PRIORITY = "priority";
-	const DATE = "date";
-	const QUANTITY = "quantity";
-	const ID_STATUS_ORDER = "id_status_order";
-	const ID_ROBOT = "id_robot";
+	const POS_X = "pos_x";
+	const POS_Y = "pos_y";
+	const POS_Z = "pox_z";
+	const TWEEZER = "tweezer";
 	const ID_PROCESS = "id_process";
 
 	//CODES
@@ -66,33 +63,28 @@ class Order{
 		}
 	}
 
-	public static function insert($order){
-		$code = $order->code;
-		$description = $order->description;
-		$priority = $order->priority;
-		$quantity = $order->quantity;
-		$idStatusOrder = $order->id_status_order;
-		$idRobot = $order->id_robot;
-		$idProcess = $order->id_process;
+	public static function insert($point){
+		$posX = $point->pos_x;
+		$posY = $point->pos_y;
+		$posZ = $point->pox_z;
+		$tweezer = $point->tweezer;
+		$idProcess = $point->id_process;
+
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
-				self::CODE . "," .
-				self::DESCRIPTION . "," .
-				self::PRIORITY . "," .
-				self::QUANTITY . "," .
-				self::ID_STATUS_ORDER . "," .
-				self::ID_ROBOT . "," .
+				self::POS_X . "," .
+				self::POS_Y . "," .
+				self::POS_Z . "," .
+				self::TWEEZER . "," .
 				self::ID_PROCESS . ")" .
-				" VALUES(:code,:description,:priority,:quantity,:id_status_order,:id_robot,:id_process)";
+				" VALUES(:pos_x,:pos_y,:pox_z,:tweezer,:id_process)";
 
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam(":code", $code);
-			$stmt->bindParam(":description", $description);
-			$stmt->bindParam(":priority", $priority);
-			$stmt->bindParam(":quantity", $quantity);
-			$stmt->bindParam(":id_status_order", $idStatusOrder);
-			$stmt->bindParam(":id_robot", $idRobot);
+			$stmt->bindParam(":pos_x", $posX);
+			$stmt->bindParam(":pos_y", $posY);
+			$stmt->bindParam(":pox_z", $posZ);
+			$stmt->bindParam(":tweezer", $tweezer);
 			$stmt->bindParam(":id_process", $idProcess);
 
 			$result = $stmt->execute();

@@ -3,7 +3,7 @@
 require("utilities/Database.php");
 require("views/ViewJson.php");
 require("models/Order.php");
-require("models/Worker.php");
+require("models/Point.php");
 
 $db = new Database();
 
@@ -48,15 +48,19 @@ switch ($method) {
 	case 'get':
 		if ($resource == "orders") {
 			echo $view->prints(Order::get($request));
-		}else if($resource == "workers"){
+		}else if($resource == "orders"){
 			echo $view->prints(Worker::get($request));
+		}else if($resource == "points"){
+			echo $view->prints(Point::get($request));
 		}
 	break;
 	case 'post':
 		if ($resource == "orders") {
 			$view->prints(Order::post($request));
-		}else if($resource == "workers"){
+		}else if($resource == "orders"){
 			$view->prints(Worker::post($request));
+		}else if($resource == "points"){
+			$view->prints(Point::post($request));
 		}
 		break;
 	case 'put':
