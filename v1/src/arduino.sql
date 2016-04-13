@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 13-04-2016 a las 16:51:35
+-- Tiempo de generación: 13-04-2016 a las 17:29:24
 -- Versión del servidor: 5.6.26
 -- Versión de PHP: 5.5.28
 
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `workers` (
   `mobile` int(9) NOT NULL,
   `telephone` int(9) NOT NULL,
   `category` char(50) NOT NULL,
-  `id_team` int(11) NOT NULL
+  `id_team` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
