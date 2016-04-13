@@ -1,11 +1,19 @@
 <?php 
 
-class Technician{
-	//Dades de la taula "technicians"
-	const TABLE_NAME = "technicians";
-	const ID_TECHNICIAN = "id";
-	const NAME = "name";
-	const SURNAME = "surname";
+class Order{
+	//Camps de la taula "orders"
+	const TABLE_NAME = "orders";
+	const ID = "id";
+	const CODE = "code";
+	const DESCRIPTION = "description";
+	const PRIORITY = "priority";
+	const DATE = "date";
+	const QUANTITY = "quantity";
+	const ID_STATUS_ORDER = "id_status_order";
+	const ID_ROBOT = "id_robot";
+	const ID_PROCESS = "id_process";
+
+	//CODES
 	const STATE_SUCCESS = 200;
 	const STATE_CREATE_SUCCESS = 201;
 	const STATE_URL_INCORRECT = 404;
@@ -13,32 +21,33 @@ class Technician{
 	const STATE_FAIL_UNKNOWN = 500;
 	const STATE_ERROR_DB = 500;
 
+	//HTTP REQUEST GET
 	public static function get($request){
 		if($request[0] == 'getAll'){
 			return self::getAll();
-		}else if($request[0] == 'login'){
-			return self::login();
+		}else if($request[0] == 'getById'){
+			return self::getById();
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
+	//HTTP REQUEST GET
 	public static function post($request){
-		if($request[0] == 'register'){
-			return self::register();
-		}else if($request[0] == 'login'){
-			return self::login();
+		if($request[0] == 'create'){
+			return self::create();
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
-	public static function register(){
+	//METHOD CREATE CALLS INSERT FUNCTION
+	public static function create(){
 		$body = file_get_contents('php://input');
 		$user = json_decode($body);
 		//validar camps
 		//crear usuari
-		$response = self::create($user);
+		$response = self::insert($user);
 		switch($response){
 			case self::STATE_CREATE_SUCCESS:
 				http_response_code(200);
@@ -57,19 +66,34 @@ class Technician{
 		}
 	}
 
-	public static function create($user){
-		$name = $user->name;
-		$surname = $user->surname;
+	public static function insert($order){
+		$code = $order->code;
+		$description = $order->description;
+		$priority = $order->priority;
+		$quantity = $order->quantity;
+		$idStatusOrder = $order->idStatusOrder;
+		$idRobot = $order->idRobot;
+		$idProcess = $order->idProcess;
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
-				self::NAME . "," .
-				self::SURNAME . ")" .
-				" VALUES(?,?)";
+				self::CODE . "," .
+				self::DESCRIPTION . "," .
+				self::PRIORITY . "," .
+				self::QUANTITY . "," .
+				self::ID_STATUS_ORDER . "," .
+				self::ID_ROBOT . "," .
+				self::ID_PROCESS . ")" .
+				" VALUES(:code,:description,:priority,:quantity,:id_status_order,:id_robot,:id_process)";
 
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam(1, $name);
-			$stmt->bindParam(2, $surname);
+			$stmt->bindParam(":code", $code);
+			$stmt->bindParam(":description", $description);
+			$stmt->bindParam(":priority", $priority);
+			$stmt->bindParam(":quantity", $quantity);
+			$stmt->bindParam(":id_status_order", $idStatusOrder);
+			$stmt->bindParam(":id_robot", $idRobot);
+			$stmt->bindParam(":id_process", $idProcess);
 
 			$result = $stmt->execute();
 
@@ -82,6 +106,12 @@ class Technician{
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
+
+	public static function delete(){}
+
+	public static function update(){}
+
+	public static function getById(){}
 
 	public static function getAll(){
 		try{
@@ -103,6 +133,8 @@ class Technician{
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
+
+	
 
 }
 

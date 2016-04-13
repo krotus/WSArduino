@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 12-04-2016 a las 17:52:04
+-- Tiempo de generación: 13-04-2016 a las 16:51:35
 -- Versión del servidor: 5.6.26
 -- Versión de PHP: 5.5.28
 
@@ -75,7 +75,9 @@ CREATE TABLE IF NOT EXISTS `robots` (
   `id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
   `name` char(50) NOT NULL,
-  `location` char(50) NOT NULL,
+  `ip_address` char(20) NOT NULL,
+  `latitude` double NOT NULL,
+  `longitude` double NOT NULL,
   `id_current_status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

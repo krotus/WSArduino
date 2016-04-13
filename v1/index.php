@@ -2,8 +2,7 @@
 
 require("utilities/Database.php");
 require("views/ViewJson.php");
-require("models/Technician.php");
-require("models/Points.php");
+require("models/Order.php");
 
 $db = new Database();
 
@@ -13,7 +12,7 @@ $db = new Database();
 // Obtenim el recurs a partir de la petició
 $request = explode("/", $_GET['PATH_INFO']);
 $resource = array_shift($request);
-$existing_resources = array('process','technicians','points');
+$existing_resources = array('orders','points','process','robots','status_order','status_robot','task','teams','workers');
 
 // COmprovem si existeix el recurs especificat
 if(!in_array($resource, $existing_resources)){
@@ -46,16 +45,18 @@ set_exception_handler(function ($exception) use ($view) {
 
 switch ($method) {
 	case 'get':
-		if ($resource == "points") {
-			echo $view->prints(Points::get($request));
-		} else if ($resource == "technicians") {
-			echo $view->prints(Technician::get($request));
-		} else if ($resource == 'process') {
-			echo $view->prints(Process::get($request));
+		if ($resource == "orders") {
+			echo $view->prints(Order::get($request));
+		}else if($resource == "orders"){
+			echo $view->prints(Worker::get($request));
 		}
 	break;
 	case 'post':
-		$view->prints($tech::post($request));
+		if ($resource == "orders") {
+			$view->prints(Order::post($request));
+		}else if($resource == "orders"){
+			$view->prints(Worker::post($request));
+		}
 		break;
 	case 'put':
 		break;
