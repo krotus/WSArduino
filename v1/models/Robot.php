@@ -1,11 +1,14 @@
 <?php 
-
-class Process{
-	//Camps de la taula "processes"
-	const TABLE_NAME = "processes";
+class Robot {
+	//Camps de la taula "robots"
+	const TABLE_NAME = "robots";
 	const ID = "id";
 	const CODE = "code";
-	const DESCRIPTION = "description";
+	const NAME = "name";
+	const IP_ADDRESS = "ip_address";
+	const LATITUDE = "latitude";
+	const LONGITUDE = "longitude";
+	const ID_CURRENT_STATUS = "id_current_status";
 
 	//CODES
 	const STATE_SUCCESS = 200;
@@ -26,6 +29,7 @@ class Process{
 		}
 	}
 
+
 	//HTTP REQUEST GET
 	public static function post($request){
 		if($request[0] == 'create'){
@@ -38,10 +42,10 @@ class Process{
 	//METHOD CREATE CALLS INSERT FUNCTION
 	public static function create(){
 		$body = file_get_contents('php://input');
-		$process = json_decode($body);
+		$robot = json_decode($body);
 		//validar camps
-		//crear proces
-		$response = self::insert($process);
+		//crear usuari
+		$response = self::insert($robot);
 		switch($response){
 			case self::STATE_CREATE_SUCCESS:
 				http_response_code(200);
@@ -60,20 +64,31 @@ class Process{
 		}
 	}
 
-	public static function insert($process){
-		$code = $process->code;
-		$description = $process->description;
-
+	public static function insert($robot){
+		$code = $robot->code;
+		$name = $robot->name;
+		$ipAddress = $robot->ip_address;
+		$latitude = $robot->latitude;
+		$longitude = $robot->longitude;
+		$idCurrentStatus = $robot->id_current_status;
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
 				self::CODE . "," .
-				self::DESCRIPTION . ")" .
-				" VALUES(:code,:description)";
+				self::NAME . "," .
+				self::IP_ADDRESS . "," .
+				self::LATITUDE . "," .
+				self::LONGITUDE . "," .
+				self::ID_CURRENT_STATUS . ")" .
+				" VALUES(:code,:name,:ip_address,:latitude,:longitude,:id_current_status)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":code", $code);
-			$stmt->bindParam(":description", $description);;
+			$stmt->bindParam(":name", $name);
+			$stmt->bindParam(":ip_address", $ipAddress);
+			$stmt->bindParam(":latitude", $latitude);
+			$stmt->bindParam(":longitude", $longitude);
+			$stmt->bindParam(":id_current_status", $idCurrentStatus);
 
 			$result = $stmt->execute();
 
@@ -114,8 +129,11 @@ class Process{
 		}
 	}
 
-	
+
+
+
+
 
 }
 
-?>
+ ?>
