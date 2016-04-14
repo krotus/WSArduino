@@ -1,15 +1,11 @@
 <?php 
-class Worker {
-	//Camps de la taula "workers"
-	const TABLE_NAME = "workers";
+
+class Process{
+	//Camps de la taula "processes"
+	const TABLE_NAME = "processes";
 	const ID = "id";
-	const NIF = "nif";
-	const NAME = "name";
-	const SURNAME = "surname";
-	const MOBILE = "mobile";
-	const TELEPHONE = "telephone";
-	const CATEGORY = "category";
-	const ID_TEAM = "id_team";
+	const CODE = "code";
+	const DESCRIPTION = "description";
 
 	//CODES
 	const STATE_SUCCESS = 200;
@@ -30,7 +26,6 @@ class Worker {
 		}
 	}
 
-
 	//HTTP REQUEST GET
 	public static function post($request){
 		if($request[0] == 'create'){
@@ -43,10 +38,10 @@ class Worker {
 	//METHOD CREATE CALLS INSERT FUNCTION
 	public static function create(){
 		$body = file_get_contents('php://input');
-		$worker = json_decode($body);
+		$process = json_decode($body);
 		//validar camps
-		//crear usuari
-		$response = self::insert($worker);
+		//crear proces
+		$response = self::insert($process);
 		switch($response){
 			case self::STATE_CREATE_SUCCESS:
 				http_response_code(200);
@@ -65,34 +60,20 @@ class Worker {
 		}
 	}
 
-	public static function insert($worker){
-		$NIF = $worker->NIF;
-		$name = $worker->name;
-		$surname = $worker->surname;
-		$mobile = $worker->mobile;
-		$telephone = $worker->telephone;
-		$category = $worker->category;
-		$idTeam = $worker->id_team;
+	public static function insert($point){
+		$code = $point->code;
+		$description = $point->description;
+
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
-				self::NIF . "," .
-				self::NAME . "," .
-				self::SURNAME . "," .
-				self::MOBILE . "," .
-				self::TELEPHONE . "," .
-				self::CATEGORY . "," .
-				self::ID_TEAM . ")" .
-				" VALUES(:NIF,:name,:surname,:mobile,:telephone,:category,:id_team)";
+				self::CODE . "," .
+				self::DESCRIPTION . ")" .
+				" VALUES(:code,:description)";
 
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam(":NIF", $NIF);
-			$stmt->bindParam(":name", $name);
-			$stmt->bindParam(":surname", $surname);
-			$stmt->bindParam(":mobile", $mobile);
-			$stmt->bindParam(":telephone", $telephone);
-			$stmt->bindParam(":category", $category);
-			$stmt->bindParam(":id_team", $idTeam);
+			$stmt->bindParam(":code", $code);
+			$stmt->bindParam(":description", $description);;
 
 			$result = $stmt->execute();
 
@@ -133,11 +114,8 @@ class Worker {
 		}
 	}
 
-
-
-
-
+	
 
 }
 
- ?>
+?>

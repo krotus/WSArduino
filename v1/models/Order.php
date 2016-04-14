@@ -44,10 +44,10 @@ class Order{
 	//METHOD CREATE CALLS INSERT FUNCTION
 	public static function create(){
 		$body = file_get_contents('php://input');
-		$user = json_decode($body);
+		$order = json_decode($body);
 		//validar camps
 		//crear usuari
-		$response = self::insert($user);
+		$response = self::insert($order);
 		switch($response){
 			case self::STATE_CREATE_SUCCESS:
 				http_response_code(200);
