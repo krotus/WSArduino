@@ -7,6 +7,7 @@ require("models/Point.php");
 require("models/Worker.php");
 require("models/Process.php");
 require("models/Robot.php");
+require("models/Team.php");
 
 $db = new Database();
 
@@ -59,6 +60,8 @@ switch ($method) {
 			echo $view->prints(Process::get($request));
 		}else if($resource == "robots"){
 			echo $view->prints(Robot::get($request));
+		}else if($resource == "teams") {
+			echo $view->prints(Team::get($request));
 		}
 	break;
 	case 'post':
@@ -72,6 +75,8 @@ switch ($method) {
 			$view->prints(Process::post($request));
 		}else if($resource == "robots"){
 			$view->prints(Robot::post($request));
+		}else if($resource == "teams") {
+			echo $view->prints(Team::post($request));
 		}
 		break;
 	case 'put':
