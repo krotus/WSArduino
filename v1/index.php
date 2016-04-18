@@ -8,6 +8,8 @@ require("models/Worker.php");
 require("models/Process.php");
 require("models/Robot.php");
 require("models/Team.php");
+require("models/StatusOrder.php");
+require("models/StatusRobot.php");
 
 $db = new Database();
 
@@ -62,7 +64,13 @@ switch ($method) {
 			echo $view->prints(Robot::get($request));
 		}else if($resource == "teams") {
 			echo $view->prints(Team::get($request));
+		}else if($resource == "status_order") {
+			echo $view->prints(StatusOrder::get($request));
+		}else if($resource == "status_robot") {
+			echo $view->prints(StatusRobot::get($request));
 		}
+
+
 	break;
 	case 'post':
 		if ($resource == "orders") {
@@ -77,6 +85,10 @@ switch ($method) {
 			$view->prints(Robot::post($request));
 		}else if($resource == "teams") {
 			echo $view->prints(Team::post($request));
+		}else if($resource == "status_order") {
+			echo $view->prints(StatusOrder::post($request));
+		}else if($resource == "status_robot") {
+			echo $view->prints(StatusRobot::post($request));
 		}
 		break;
 	case 'put':
