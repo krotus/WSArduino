@@ -2,16 +2,16 @@
 
 require_once("utilities/ExceptionApi.php");
 
-class Robot {
-	//Camps de la taula "robots"
-	const TABLE_NAME = "robots";
+class Task {
+	//Camps de la taula "tasks"
+	const TABLE_NAME = "tasks";
 	const ID = "id";
-	const CODE = "code";
-	const NAME = "name";
-	const IP_ADDRESS = "ip_address";
-	const LATITUDE = "latitude";
-	const LONGITUDE = "longitude";
-	const ID_CURRENT_STATUS = "id_current_status";
+	const ID_TEAM = "id_team";
+	const ID_ORDER = "id_order";
+	const ID_WORKER = "id_worker";
+	const DATA_ASSIGNATION = "data_assignation";
+	const DATA_COMPLETION = "data_completion";
+	const JUSTIFICATION = "justification";
 
 	//CODES
 	const STATE_SUCCESS = 200;
@@ -45,10 +45,10 @@ class Robot {
 	//METHOD CREATE CALLS INSERT FUNCTION
 	public static function create(){
 		$body = file_get_contents('php://input');
-		$robot = json_decode($body);
+		$task = json_decode($body);
 		//validar camps
 		//crear usuari
-		$response = self::insert($robot);
+		$response = self::insert($task);
 		switch($response){
 			case self::STATE_CREATE_SUCCESS:
 				http_response_code(200);
@@ -67,7 +67,8 @@ class Robot {
 		}
 	}
 
-	public static function insert($robot){
+	//TODO
+	public static function insert($task){
 		$code = $robot->code;
 		$name = $robot->name;
 		$ipAddress = $robot->ip_address;

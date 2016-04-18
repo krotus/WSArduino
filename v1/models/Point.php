@@ -1,5 +1,7 @@
 <?php 
 
+require_once("utilities/ExceptionApi.php");
+
 class Point{
 	//Camps de la taula "points"
 	const TABLE_NAME = "points";
@@ -23,7 +25,9 @@ class Point{
 		if($request[0] == 'getAll'){
 			return self::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById();
+			return self::getById($request[1]);
+		}else if($request[0] == 'getAllByIdProcess'){
+			return self::getAllByIdProcess($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -104,6 +108,22 @@ class Point{
 	public static function update(){}
 
 	public static function getById(){}
+
+	public static function getAllByIdProcess($idProcess){
+		try{
+			$db = new Database();
+			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE ". self::ID_PROCESS ." = :idProcess";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array(':idProcess' => $idProcess));
+			$points = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($points){
+				http_response_code(200);
+				return $points;
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function getAll(){
 		try{

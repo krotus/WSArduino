@@ -1,5 +1,7 @@
 <?php 
 
+require_once("utilities/ExceptionApi.php");
+
 class Order{
 	//Camps de la taula "orders"
 	const TABLE_NAME = "orders";
@@ -26,7 +28,7 @@ class Order{
 		if($request[0] == 'getAll'){
 			return self::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById();
+			return self::getById($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -111,7 +113,43 @@ class Order{
 
 	public static function update(){}
 
-	public static function getById(){}
+	public static function getById($id){
+		try{
+			$db = new Database();
+			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE id = :id";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array(':id' => $id));
+			$ordre = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($ordre){
+				$id_process = $ordre['id_process'];
+				include_once("Process.php");
+				$process_class = new Process();
+				$process = $process_class::getById($id_process);
+				if($process){
+					include_once("Point.php");
+					$point_class = new Point();
+					$points = $point_class::getAllByIdProcess(1);
+					if($points){
+						http_response_code(200);
+						return [
+							"state" => self::STATE_SUCCESS,
+							"order" => $ordre,
+							"points"=> $points
+						];
+					}else{
+						throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error al obtindre els punts");
+					}
+				}else{
+					throw new ExceptionApi(self::STATE_ERROR_DB, "S'ha produït un error al obtindre el process");
+				}
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR_DB, "S'ha produït un error al obtindre la ordre");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+
+	}
 
 	public static function getAll(){
 		try{

@@ -1,5 +1,7 @@
 <?php 
 
+require_once("utilities/ExceptionApi.php");
+
 class Process{
 	//Camps de la taula "processes"
 	const TABLE_NAME = "processes";
@@ -20,7 +22,7 @@ class Process{
 		if($request[0] == 'getAll'){
 			return self::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById();
+			return self::getById($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -91,7 +93,26 @@ class Process{
 
 	public static function update(){}
 
-	public static function getById(){}
+	public static function getById($id){
+		try{
+			$db = new Database();
+			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE id = :id";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array(':id' => $id));
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($row){	
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data" => $row
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR_DB, "S'ha produït un error al obtindre el procés.");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function getAll(){
 		try{

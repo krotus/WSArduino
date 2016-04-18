@@ -1,4 +1,7 @@
 <?php 
+
+require_once("utilities/ExceptionApi.php");
+
 class Worker {
 	//Camps de la taula "workers"
 	const TABLE_NAME = "workers";
