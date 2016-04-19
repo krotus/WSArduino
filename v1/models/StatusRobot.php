@@ -18,7 +18,7 @@ class StatusRobot {
 		if($request[0] == 'getAll'){
 			return self::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById();
+			return self::getById($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -87,7 +87,21 @@ class StatusRobot {
 
 	public static function update(){}
 
-	public static function getById(){}
+	public static function getById($id){
+		try{
+			$db = new Database();
+			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE ". self::ID ." = :id";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array(':id' => $id));
+			$statusRobot = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($statusRobot){
+				http_response_code(200);
+				return $statusRobot;
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function getAll(){
 		try{

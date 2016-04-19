@@ -110,7 +110,21 @@ class Task {
 
 	public static function update(){}
 
-	public static function getById(){}
+	public static function getById($id){
+		try{
+			$db = new Database();
+			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE ". self::ID ." = :id";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array(':id' => $id));
+			$task = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($task){
+				http_response_code(200);
+				return $task;
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function getAll(){
 		try{
