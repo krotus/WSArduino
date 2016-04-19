@@ -26,7 +26,7 @@ class Task {
 		if($request[0] == 'getAll'){
 			return self::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById();
+			return self::getById($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
