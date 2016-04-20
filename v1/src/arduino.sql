@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 13-04-2016 a las 17:29:24
+-- Tiempo de generación: 20-04-2016 a las 16:35:42
 -- Versión del servidor: 5.6.26
 -- Versión de PHP: 5.5.28
 
@@ -36,7 +36,14 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `id_status_order` int(11) NOT NULL,
   `id_robot` int(11) NOT NULL,
   `id_process` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `orders`
+--
+
+INSERT INTO `orders` (`id`, `code`, `description`, `priority`, `date`, `quantity`, `id_status_order`, `id_robot`, `id_process`) VALUES
+(1, 99, 'Orde de fabricació prova', 5, '2016-04-19 00:00:00', 4, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -51,7 +58,15 @@ CREATE TABLE IF NOT EXISTS `points` (
   `pos_z` int(11) NOT NULL,
   `tweezer` tinyint(1) NOT NULL,
   `id_process` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `points`
+--
+
+INSERT INTO `points` (`id`, `pos_x`, `pos_y`, `pos_z`, `tweezer`, `id_process`) VALUES
+(1, 10, 20, 30, 0, 1),
+(2, 40, 50, 60, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -62,8 +77,15 @@ CREATE TABLE IF NOT EXISTS `points` (
 CREATE TABLE IF NOT EXISTS `processes` (
   `id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
-  `description` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `description` char(50) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `processes`
+--
+
+INSERT INTO `processes` (`id`, `code`, `description`) VALUES
+(1, 100, 'Procés de prova');
 
 -- --------------------------------------------------------
 
@@ -79,7 +101,14 @@ CREATE TABLE IF NOT EXISTS `robots` (
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
   `id_current_status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `robots`
+--
+
+INSERT INTO `robots` (`id`, `code`, `name`, `ip_address`, `latitude`, `longitude`, `id_current_status`) VALUES
+(1, 100, 'First Robot', '192.168.1.3', 14.25487, 21.25467, 1);
 
 -- --------------------------------------------------------
 
@@ -121,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `status_robot` (
 INSERT INTO `status_robot` (`id`, `description`) VALUES
 (1, 'online'),
 (2, 'offline'),
-(3, 'bussy'),
+(3, 'busy'),
 (4, 'disconnected');
 
 -- --------------------------------------------------------
@@ -136,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `id_order` int(11) NOT NULL,
   `id_worker` int(11) NOT NULL,
   `date_assignation` datetime NOT NULL,
-  `date_Completion` datetime DEFAULT NULL,
+  `date_completion` datetime DEFAULT NULL,
   `justification` char(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -149,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
 CREATE TABLE IF NOT EXISTS `teams` (
   `id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
-  `name` int(11) NOT NULL
+  `name` char(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -250,22 +279,22 @@ ALTER TABLE `workers`
 -- AUTO_INCREMENT de la tabla `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `points`
 --
 ALTER TABLE `points`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `processes`
 --
 ALTER TABLE `processes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `robots`
 --
 ALTER TABLE `robots`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `status_order`
 --
