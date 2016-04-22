@@ -121,10 +121,21 @@ class Order{
 			$stmt->execute(array(':id' => $id));
 			$ordre = $stmt->fetch(PDO::FETCH_ASSOC);
 			if($ordre){
+				//canvia id de status order
+				include_once("StatusOrder.php");
+				$statusOrder = StatusOrder::getById($ordre['id_status_order']);
+				$ordre['id_status_order'] = $statusOrder[0]['description'];
+				//canvia id de robot
+				include_once("Robot.php");
+				$robot = Robot::getById($ordre['id_robot']);
+				$ordre['id_robot'] = $robot[0]['name'];
+
+				//agafa els punts
 				$id_process = $ordre['id_process'];
 				include_once("Process.php");
 				$process_class = new Process();
 				$process = $process_class::getById($id_process);
+				$ordre['id_process'] = $process['data']['description'];
 				if($process){
 					include_once("Point.php");
 					$point_class = new Point();

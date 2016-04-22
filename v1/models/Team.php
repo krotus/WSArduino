@@ -100,10 +100,7 @@ class Team {
 			$teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			if($teams){
 				http_response_code(200);
-				return [
-					"state" => self::STATE_SUCCESS,
-					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
-				];
+				return $teams;
 			}
 		}catch(PDOException $e){
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
