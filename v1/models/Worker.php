@@ -6,6 +6,8 @@ class Worker {
 	//Camps de la taula "workers"
 	const TABLE_NAME = "workers";
 	const ID = "id";
+	const USERNAME = "username";
+	const PASSWORD = "password";
 	const NIF = "nif";
 	const NAME = "name";
 	const SURNAME = "surname";
@@ -13,6 +15,7 @@ class Worker {
 	const TELEPHONE = "telephone";
 	const CATEGORY = "category";
 	const ID_TEAM = "id_team";
+	const IS_ADMIN = "is_admin";
 
 	//CODES
 	const STATE_SUCCESS = 200;
@@ -69,6 +72,9 @@ class Worker {
 	}
 
 	public static function insert($worker){
+		$username = $worker->username;
+		//tracte sha1 aqui o la plataforma app
+		$password = $worker->password;
 		$NIF = $worker->NIF;
 		$name = $worker->name;
 		$surname = $worker->surname;
@@ -76,19 +82,25 @@ class Worker {
 		$telephone = $worker->telephone;
 		$category = $worker->category;
 		$idTeam = $worker->id_team;
+		$isAdmin = $worker->is_admin;
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
+				self::USERNAME . "," .
+				self::PASSWORD . "," .
 				self::NIF . "," .
 				self::NAME . "," .
 				self::SURNAME . "," .
 				self::MOBILE . "," .
 				self::TELEPHONE . "," .
 				self::CATEGORY . "," .
-				self::ID_TEAM . ")" .
-				" VALUES(:NIF,:name,:surname,:mobile,:telephone,:category,:id_team)";
+				self::ID_TEAM . "," .
+				self::IS_ADMIN . ")" .
+				" VALUES(:username,:password,:NIF,:name,:surname,:mobile,:telephone,:category,:id_team)";
 
 			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":username", $username);
+			$stmt->bindParam(":password", $password);
 			$stmt->bindParam(":NIF", $NIF);
 			$stmt->bindParam(":name", $name);
 			$stmt->bindParam(":surname", $surname);
@@ -96,6 +108,7 @@ class Worker {
 			$stmt->bindParam(":telephone", $telephone);
 			$stmt->bindParam(":category", $category);
 			$stmt->bindParam(":id_team", $idTeam);
+			$stmt->bindParam(":is_admin", $idTeam);
 
 			$result = $stmt->execute();
 

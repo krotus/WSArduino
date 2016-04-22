@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 20-04-2016 a las 16:35:42
+-- Tiempo de generación: 22-04-2016 a las 16:36:00
 -- Versión del servidor: 5.6.26
 -- Versión de PHP: 5.5.28
 
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `status_order` (
 --
 
 INSERT INTO `status_order` (`id`, `description`) VALUES
-(1, 'peding'),
+(1, 'pending'),
 (2, 'initiated'),
 (3, 'completed'),
 (4, 'uncompleted'),
@@ -179,7 +179,14 @@ CREATE TABLE IF NOT EXISTS `teams` (
   `id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
   `name` char(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `teams`
+--
+
+INSERT INTO `teams` (`id`, `code`, `name`) VALUES
+(2, 100, 'EquipA');
 
 -- --------------------------------------------------------
 
@@ -189,14 +196,24 @@ CREATE TABLE IF NOT EXISTS `teams` (
 
 CREATE TABLE IF NOT EXISTS `workers` (
   `id` int(11) NOT NULL,
+  `username` char(50) NOT NULL,
+  `password` char(40) NOT NULL,
   `NIF` char(9) NOT NULL,
   `name` char(50) NOT NULL,
   `surname` char(50) NOT NULL,
-  `mobile` int(9) NOT NULL,
-  `telephone` int(9) NOT NULL,
+  `mobile` int(9) DEFAULT NULL,
+  `telephone` int(9) DEFAULT NULL,
   `category` char(50) NOT NULL,
-  `id_team` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id_team` int(11) DEFAULT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `workers`
+--
+
+INSERT INTO `workers` (`id`, `username`, `password`, `NIF`, `name`, `surname`, `mobile`, `telephone`, `category`, `id_team`, `is_admin`) VALUES
+(1, 'admin', 'a4cbb2f3933c5016da7e83fd135ab8a48b67bf61', '00000000T', 'Xavi', 'Martinez', 633720214, 938665411, 'Gerent', 2, 0);
 
 --
 -- Índices para tablas volcadas
@@ -314,12 +331,12 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT de la tabla `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `workers`
 --
 ALTER TABLE `workers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- Restricciones para tablas volcadas
 --
