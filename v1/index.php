@@ -69,8 +69,6 @@ switch ($method) {
 		}else if($resource == "status_robot") {
 			echo $view->prints(StatusRobot::get($request));
 		}
-
-
 	break;
 	case 'post':
 		if ($resource == "orders") {

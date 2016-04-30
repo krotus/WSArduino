@@ -136,11 +136,11 @@ class Worker {
 			$db = new Database();
 			$sql = "DELETE FROM " . self::TABLE_NAME . " WHERE ". self::ID ." = :id";
 			$stmt = $db->prepare($sql);
-			$stmt->execute(array(':id' => $id));
-			$worker = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			if($worker){
-				http_response_code(200);
-				return $worker;
+			$result = $stmt->execute(array(':id' => $id));
+			if($result){
+				return self::STATE_CREATE_SUCCESS;
+			}else{
+				return self::STATE_CREATE_FAIL;
 			}
 		}catch(PDOException $e){
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
