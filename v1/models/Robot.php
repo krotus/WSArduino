@@ -38,6 +38,19 @@ class Robot {
 	public static function post($request){
 		if($request[0] == 'create'){
 			return self::create();
+		}else if($request[0] == 'ip'){
+			$idRobot = $request[1];
+			$body = file_get_contents('php://input');
+			$robot = json_decode($body);
+			if(self::updateIP($idRobot, $robot) > 0){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"message" => "Actualització IP del robot existosa"
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+			}
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
