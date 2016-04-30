@@ -45,21 +45,36 @@ class Robot {
 
 	//HTTP REQUEST PUT
 	public static function put($request){
-		$idRobot = $request[0];
-		if(!empty($request[0])){
+		if(!empty($request[0]) && !empty($request[1])){
+			$route = $request[0];
+			$idRobot = $request[1];
 			$body = file_get_contents('php://input');
 			$robot = json_decode($body);
-			if(self::update($idRobot, $robot) > 0){
-				http_response_code(200);
-				return [
-					"state" => self::STATE_SUCCESS,
-					"message" => "Actualització robot existosa"
-				];
+			if($route == "all"){
+				if(self::update($idRobot, $robot) > 0){
+					http_response_code(200);
+					return [
+						"state" => self::STATE_SUCCESS,
+						"message" => "Actualització robot existosa"
+					];
+				}else{
+					throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+				}
+			}else if($route == "ip"){
+				if(self::updateIP($idRobot, $robot) > 0){
+					http_response_code(200);
+					return [
+						"state" => self::STATE_SUCCESS,
+						"message" => "Actualització IP del robot existosa"
+					];
+				}else{
+					throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+				}
 			}else{
-				throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+				throw new ExceptionApi(self::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}
 		}else{
-			throw new ExceptionApi(self::STATE_ERROR_PARAMETERS, "Falta la id del robot", 422);
+			throw new ExceptionApi(self::STATE_ERROR_PARAMETERS, "Falta la ruta del robot", 422);
 		}
 	}
 
@@ -149,6 +164,27 @@ class Robot {
 			$stmt->bindParam(":latitude", $robot->latitude);
 			$stmt->bindParam(":longitude", $robot->longitude);
 			$stmt->bindParam(":id_current_status", $robot->id_current_status);
+			$stmt->bindParam(":id", $id);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+	public static function updateIP($id, $robot){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::IP_ADDRESS . " = :ip_address " .
+			"WHERE " . self::ID . " = :id";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":ip_address", $robot->ip_address);
 			$stmt->bindParam(":id", $id);
 
 			$stmt->execute();
