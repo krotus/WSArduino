@@ -13,7 +13,7 @@ class ViewJson extends ViewApi{
 		}
 		header("Content-Type: application/json; charset=utf8");
 		//echo json_encode($body, JSON_PRETTY_PRINT);
-		echo json_encode($body);
+		echo json_encode($body,JSON_UNESCAPED_UNICODE);
 		
 	}
 }

@@ -37,10 +37,19 @@ class Worker {
 	}
 
 
-	//HTTP REQUEST GET
+	//HTTP REQUEST POST
 	public static function post($request){
 		if($request[0] == 'create'){
 			return self::create();
+		}else{
+			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+		}
+	}
+
+		//HTTP REQUEST DELETE
+	public static function delete($request){
+		if($request[0] == 'deleteById'){
+			return self::deleteById($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -96,7 +105,7 @@ class Worker {
 				self::CATEGORY . "," .
 				self::ID_TEAM . "," .
 				self::IS_ADMIN . ")" .
-				" VALUES(:username,:password,:NIF,:name,:surname,:mobile,:telephone,:category,:id_team)";
+				" VALUES(:username,:password,:NIF,:name,:surname,:mobile,:telephone,:category,:id_team,:is_admin)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":username", $username);
@@ -108,7 +117,7 @@ class Worker {
 			$stmt->bindParam(":telephone", $telephone);
 			$stmt->bindParam(":category", $category);
 			$stmt->bindParam(":id_team", $idTeam);
-			$stmt->bindParam(":is_admin", $idTeam);
+			$stmt->bindParam(":is_admin", $isAdmin);
 
 			$result = $stmt->execute();
 
@@ -122,7 +131,21 @@ class Worker {
 		}
 	}
 
-	public static function delete(){}
+	public static function deleteById($id){
+		try{
+			$db = new Database();
+			$sql = "DELETE FROM " . self::TABLE_NAME . " WHERE ". self::ID ." = :id";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array(':id' => $id));
+			$worker = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($worker){
+				http_response_code(200);
+				return $worker;
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function update(){}
 

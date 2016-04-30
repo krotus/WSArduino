@@ -97,6 +97,9 @@ switch ($method) {
 		}
 		break;
 	case 'delete':
+		if ($resource == "workers") {
+			$view->prints(Worker::delete($request));
+		}
 		break;
 	default:
 		// mètode erroni
