@@ -18,6 +18,7 @@ class Robot {
 	const STATE_CREATE_SUCCESS = 201;
 	const STATE_URL_INCORRECT = 404;
 	const STATE_CREATE_FAIL = 400;
+	const STATE_ERROR_PARAMETERS = 422;
 	const STATE_FAIL_UNKNOWN = 500;
 	const STATE_ERROR_DB = 500;
 
@@ -39,6 +40,26 @@ class Robot {
 			return self::create();
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+		}
+	}
+
+	//HTTP REQUEST PUT
+	public static function put($request){
+		$idRobot = $request[0];
+		if(!empty($request[0])){
+			$body = file_get_contents('php://input');
+			$robot = json_decode($body);
+			if(self::update($idRobot, $robot) > 0){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"message" => "Actualització robot existosa"
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+			}
+		}else{
+			throw new ExceptionApi(self::STATE_ERROR_PARAMETERS, "Falta la id del robot", 422);
 		}
 	}
 
@@ -107,7 +128,36 @@ class Robot {
 
 	public static function delete(){}
 
-	public static function update(){}
+	public static function update($id, $robot){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::CODE . " = :code," .
+			self::NAME . " = :name," .
+			self::IP_ADDRESS . " = :ip_address," .
+			self::LATITUDE . " = :latitude," .
+			self::LONGITUDE . " = :longitude," .
+			self::ID_CURRENT_STATUS . " = :id_current_status " .
+			"WHERE " . self::ID . " = :id";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":code", $robot->code);
+			$stmt->bindParam(":name", $robot->name);
+			$stmt->bindParam(":ip_address", $robot->ip_address);
+			$stmt->bindParam(":latitude", $robot->latitude);
+			$stmt->bindParam(":longitude", $robot->longitude);
+			$stmt->bindParam(":id_current_status", $robot->id_current_status);
+			$stmt->bindParam(":id", $id);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function getById($id){
 		try{

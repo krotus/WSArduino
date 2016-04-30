@@ -37,7 +37,7 @@ $view = new ViewJson();
 
 set_exception_handler(function ($exception) use ($view) {
     $body = array(
-        "sate" => $exception->state,
+        "state" => $exception->state,
         "message" => $exception->getMessage()
     );
     if ($exception->getCode()) {
@@ -92,6 +92,9 @@ switch ($method) {
 		}
 		break;
 	case 'put':
+		if($resource == "robots"){
+			$view->prints(Robot::put($request));
+		}
 		break;
 	case 'delete':
 		break;
