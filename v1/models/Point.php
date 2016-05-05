@@ -2,7 +2,7 @@
 
 require_once("utilities/ExceptionApi.php");
 
-class Point{
+class Point extends AbstractDAO {
 	//Camps de la taula "points"
 	const TABLE_NAME = "points";
 	const ID = "id";
@@ -23,47 +23,30 @@ class Point{
 	//HTTP REQUEST GET
 	public static function get($request){
 		if($request[0] == 'getAll'){
-			return self::getAll();
+			return parent::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById($request[1]);
-		}else if($request[0] == 'getAllByIdProcess'){
-			return self::getAllByIdProcess($request[1]);
+			return parent::getById($request[1]);
 		}else{
-			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
-	//HTTP REQUEST GET
+
+	//HTTP REQUEST POST
 	public static function post($request){
 		if($request[0] == 'create'){
-			return self::create();
+			return parent::create();
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
-	//METHOD CREATE CALLS INSERT FUNCTION
-	public static function create(){
-		$body = file_get_contents('php://input');
-		$point = json_decode($body);
-		//validar camps
-		//crear usuari
-		$response = self::insert($point);
-		switch($response){
-			case self::STATE_CREATE_SUCCESS:
-				http_response_code(200);
-				return
-					[
-						"state" => 200,
-						"message" => utf8_encode("Register success.")
-					];
-				break;
-			case 400:
-				throw new ExceptionApi(self::STATE_CREATE_FAIL, "Ha sorgit un error");
-				break;
-			default:
-				throw new ExceptionApi(self::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
-
+		//HTTP REQUEST DELETE
+	public static function delete($request){
+		if($request[0] == 'deleteById'){
+			return parent::deleteById($request[1]);
+		}else{
+			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
@@ -103,25 +86,8 @@ class Point{
 		}
 	}
 
-	public static function delete(){}
 
 	public static function update(){}
-
-	public static function getById($id){
-		try{
-			$db = new Database();
-			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE ". self::ID ." = :id";
-			$stmt = $db->prepare($sql);
-			$stmt->execute(array(':id' => $id));
-			$points = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			if($points){
-				http_response_code(200);
-				return $points;
-			}
-		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
-		}
-	}
 
 	public static function getAllByIdProcess($idProcess){
 		try{
@@ -138,29 +104,6 @@ class Point{
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
-
-	public static function getAll(){
-		try{
-			$db = new Database();
-			$sql = "SELECT * FROM ".self::TABLE_NAME;
-			$stmt = $db->prepare($sql);
-			$result = $stmt->execute();
-
-			if($result){
-				http_response_code(200);
-				return [
-					"state" => self::STATE_SUCCESS,
-					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
-				];
-			}else{
-				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
-			}
-		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
-		}
-	}
-
-	
 
 }
 

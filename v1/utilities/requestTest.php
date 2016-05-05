@@ -6,7 +6,7 @@
 //id que agafara en GET i DELETE
 $profileID = "2";
 // urls de prova per als diferents metodes
-$urlGet = "http://localhost/WSArduino/v1/orders/getById/".$profileID;
+$urlGet = "http://localhost/WSArduino/v1/orders/getAll";
 $urlPost = "http://localhost/WSArduino/v1/workers/create";
 $urlDelete = "http://localhost/WSArduino/v1/workers/deleteById/".$profileID;
 
@@ -43,7 +43,7 @@ function sendGetReq($url)
 	// execute the request
 	$output = curl_exec($ch);
 	// output the profile information - includes the header
-	echo($output) . PHP_EOL;
+	echo($output);
 	// close curl resource to free up system resources
 	curl_close($ch);
 }

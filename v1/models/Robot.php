@@ -2,7 +2,7 @@
 
 require_once("utilities/ExceptionApi.php");
 
-class Robot {
+class Robot  extends AbstractDAO {
 	//Camps de la taula "robots"
 	const TABLE_NAME = "robots";
 	const ID = "id";
@@ -22,22 +22,30 @@ class Robot {
 	const STATE_FAIL_UNKNOWN = 500;
 	const STATE_ERROR_DB = 500;
 
-	//HTTP REQUEST GET
+//HTTP REQUEST GET
 	public static function get($request){
 		if($request[0] == 'getAll'){
-			return self::getAll();
+			return parent::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById($request[1]);
+			return parent::getById($request[1]);
+		}else{
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
+		}
+	}
+
+	//HTTP REQUEST DELETE
+	public static function delete($request){
+		if($request[0] == 'deleteById'){
+			return parent::deleteById($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
-
 	//HTTP REQUEST GET
 	public static function post($request){
 		if($request[0] == 'create'){
-			return self::create();
+			return parent::create();
 		}else if($request[0] == 'ip'){
 			$idRobot = $request[1];
 			$body = file_get_contents('php://input');
@@ -48,10 +56,10 @@ class Robot {
 					"state" => self::STATE_SUCCESS,
 					"message" => "Actualització IP del robot existosa"
 				];
-			}else{
+			} else {
 				throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
 			}
-		}else{
+		} else {
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
@@ -88,31 +96,6 @@ class Robot {
 			}
 		}else{
 			throw new ExceptionApi(self::STATE_ERROR_PARAMETERS, "Falta la ruta del robot", 422);
-		}
-	}
-
-	//METHOD CREATE CALLS INSERT FUNCTION
-	public static function create(){
-		$body = file_get_contents('php://input');
-		$robot = json_decode($body);
-		//validar camps
-		//crear usuari
-		$response = self::insert($robot);
-		switch($response){
-			case self::STATE_CREATE_SUCCESS:
-				http_response_code(200);
-				return
-					[
-						"state" => 200,
-						"message" => utf8_encode("Register success.")
-					];
-				break;
-			case 400:
-				throw new ExceptionApi(self::STATE_CREATE_FAIL, "Ha sorgit un error");
-				break;
-			default:
-				throw new ExceptionApi(self::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
-
 		}
 	}
 
@@ -207,47 +190,6 @@ class Robot {
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
-
-	public static function getById($id){
-		try{
-			$db = new Database();
-			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE ". self::ID ." = :id";
-			$stmt = $db->prepare($sql);
-			$stmt->execute(array(':id' => $id));
-			$robots = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			if($robots){
-				http_response_code(200);
-				return $robots;
-			}
-		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
-		}
-	}
-	public static function getAll(){
-		try{
-			$db = new Database();
-			$sql = "SELECT * FROM ".self::TABLE_NAME;
-			$stmt = $db->prepare($sql);
-			$result = $stmt->execute();
-
-			if($result){
-				http_response_code(200);
-				return [
-					"state" => self::STATE_SUCCESS,
-					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
-				];
-			}else{
-				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
-			}
-		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
-		}
-	}
-
-
-
-
-
 
 }
 
