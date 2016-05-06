@@ -1,5 +1,5 @@
 <?php 
-class StatusRobot {
+class StatusRobot extends AbstractDAO {
 	//Camps de la taula "Teams"
 	const TABLE_NAME = "status_robot";
 	const ID = "id";
@@ -16,19 +16,28 @@ class StatusRobot {
 	//HTTP REQUEST GET
 	public static function get($request){
 		if($request[0] == 'getAll'){
-			return self::getAll();
+			return parent::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById($request[1]);
+			return parent::getById($request[1]);
+		}else{
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
+		}
+	}
+
+
+	//HTTP REQUEST POST
+	public static function post($request){
+		if($request[0] == 'create'){
+			return parent::create();
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
-
-	//HTTP REQUEST GET
-	public static function post($request){
-		if($request[0] == 'create'){
-			return self::create();
+		//HTTP REQUEST DELETE
+	public static function delete($request){
+		if($request[0] == 'deleteById'){
+			return parent::deleteById($request[1]);
 		}else{
 			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
