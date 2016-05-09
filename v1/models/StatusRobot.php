@@ -92,7 +92,6 @@ class StatusRobot extends AbstractDAO {
 		}
 	}
 
-	public static function delete(){}
 
 	public static function update(){}
 

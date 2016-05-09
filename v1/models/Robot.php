@@ -137,8 +137,6 @@ class Robot  extends AbstractDAO {
 		}
 	}
 
-	public static function delete(){}
-
 	public static function update($id, $robot){
 		try{
 			//creant la consulta UPDATE

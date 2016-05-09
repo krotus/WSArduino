@@ -2,6 +2,7 @@
 
 require_once("utilities/ExceptionApi.php");
 
+
 class Point extends AbstractDAO {
 	//Camps de la taula "points"
 	const TABLE_NAME = "points";
