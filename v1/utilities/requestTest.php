@@ -2,13 +2,15 @@
 /**
  *  Example API call
  */
+header('Content-Type: text/html; charset=utf-8');
+
 
 //id que agafara en GET i DELETE
-$profileID = "2";
+$profileID = "1";
 // urls de prova per als diferents metodes
-$urlGet = "http://localhost/WSArduino/v1/orders/getAll";
-$urlPost = "http://localhost/WSArduino/v1/workers/create";
-$urlDelete = "http://localhost/WSArduino/v1/workers/deleteById/".$profileID;
+$urlGet = "http://localhost/api.arduino.com/v1/orders/getById/".$profileID;
+$urlPost = "http://localhost/api.arduino.com/v1/workers/create";
+$urlDelete = "http://localhost/api.arduino.com/v1/workers/deleteById/".$profileID;
 
 //dades de prova per POST
 $data = array ("username"=> "tete",
@@ -21,7 +23,6 @@ $data = array ("username"=> "tete",
 	"category"=> "Gerent",
 	"id_team"=> "2",
 	"is_admin"=> "0");
-
 
 
 sendGetReq($urlGet);
@@ -43,7 +44,7 @@ function sendGetReq($url)
 	// execute the request
 	$output = curl_exec($ch);
 	// output the profile information - includes the header
-	echo($output);
+	echo ($output) . PHP_EOL;
 	// close curl resource to free up system resources
 	curl_close($ch);
 }
