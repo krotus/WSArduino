@@ -78,30 +78,30 @@ class Task extends AbstractDAO {
 
 	//TODO
 	public static function insert($task){
-		$code = $robot->code;
-		$name = $robot->name;
-		$ipAddress = $robot->ip_address;
-		$latitude = $robot->latitude;
-		$longitude = $robot->longitude;
-		$idCurrentStatus = $robot->id_current_status;
+		$team = $task->team;
+		$order = $task->order;
+		$worker = $task->worker;
+		$dateAssignation = $task->dateAssignation;
+		$dateCompletion = $task->dateCompletion;
+		$justification = $task->justification;
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
-				self::CODE . "," .
-				self::NAME . "," .
-				self::IP_ADDRESS . "," .
-				self::LATITUDE . "," .
-				self::LONGITUDE . "," .
-				self::ID_CURRENT_STATUS . ")" .
-				" VALUES(:code,:name,:ip_address,:latitude,:longitude,:id_current_status)";
+				self::ID_TEAM . "," .
+				self::ID_ORDER . "," .
+				self::ID_WORKER . "," .
+				self::DATA_ASSIGNATION . "," .
+				self::DATA_COMPLETION . "," .
+				self::JUSTIFICATION . ")" .
+				" VALUES(:id_team,:id_order,:id_worker,:date_assignation,:date_completion,:justification)";
 
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam(":code", $code);
-			$stmt->bindParam(":name", $name);
-			$stmt->bindParam(":ip_address", $ipAddress);
-			$stmt->bindParam(":latitude", $latitude);
-			$stmt->bindParam(":longitude", $longitude);
-			$stmt->bindParam(":id_current_status", $idCurrentStatus);
+			$stmt->bindParam(":id_team", $team);
+			$stmt->bindParam(":id_order", $order);
+			$stmt->bindParam(":id_worker", $worker);
+			$stmt->bindParam(":date_assignation", $dateAssignation);
+			$stmt->bindParam(":date_completion", $dateCompletion);
+			$stmt->bindParam(":justification", $justification);
 
 			$result = $stmt->execute();
 

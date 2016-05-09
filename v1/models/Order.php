@@ -44,6 +44,7 @@ class Order extends AbstractDAO {
 	}
 
 
+
 	//HTTP REQUEST DELETE
 	public static function delete($request){
 		if($request[0] == 'deleteById'){
@@ -58,9 +59,9 @@ class Order extends AbstractDAO {
 		$description = $order->description;
 		$priority = $order->priority;
 		$quantity = $order->quantity;
-		$idStatusOrder = $order->id_status_order;
-		$idRobot = $order->id_robot;
-		$idProcess = $order->id_process;
+		$idStatusOrder = $order->statusOrder;
+		$idRobot = $order->robot;
+		$idProcess = $order->process;
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .

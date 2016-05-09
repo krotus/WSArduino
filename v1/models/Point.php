@@ -52,11 +52,11 @@ class Point extends AbstractDAO {
 	}
 
 	public static function insert($point){
-		$posX = $point->pos_x;
-		$posY = $point->pos_y;
-		$posZ = $point->pox_z;
+		$posX = $point->posX;
+		$posY = $point->posY;
+		$posZ = $point->posZ;
 		$tweezer = $point->tweezer;
-		$idProcess = $point->id_process;
+		$idProcess = $point->process;
 
 		try{
 			$db = new Database();

@@ -52,14 +52,14 @@ class Worker extends AbstractDAO {
 		$username = $worker->username;
 		//tracte sha1 aqui o la plataforma app
 		$password = $worker->password;
-		$NIF = $worker->NIF;
+		$NIF = $worker->nif;
 		$name = $worker->name;
 		$surname = $worker->surname;
 		$mobile = $worker->mobile;
 		$telephone = $worker->telephone;
 		$category = $worker->category;
-		$idTeam = $worker->id_team;
-		$isAdmin = $worker->is_admin;
+		$idTeam = $worker->team;
+		$isAdmin = $worker->isAdmin;
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .

@@ -102,10 +102,10 @@ class Robot  extends AbstractDAO {
 	public static function insert($robot){
 		$code = $robot->code;
 		$name = $robot->name;
-		$ipAddress = $robot->ip_address;
+		$ipAddress = $robot->ipAddress;
 		$latitude = $robot->latitude;
 		$longitude = $robot->longitude;
-		$idCurrentStatus = $robot->id_current_status;
+		$idCurrentStatus = $robot->statusRobot;
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
