@@ -35,10 +35,13 @@ abstract class AbstractDAO
 			$sql = "SELECT * FROM " . static::TABLE_NAME . " WHERE ". static::ID ." = :id";
 			$stmt = $db->prepare($sql);
 			$stmt->execute(array(':id' => $id));
-			$resource = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$resource = $stmt->fetch(PDO::FETCH_ASSOC);
 			if($resource){
 				http_response_code(200);
-				return $resource;
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $resource
+				];
 			}
 		}catch(PDOException $e){
 			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
