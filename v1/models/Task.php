@@ -13,14 +13,6 @@ class Task extends AbstractDAO {
 	const DATA_COMPLETION = "data_completion";
 	const JUSTIFICATION = "justification";
 
-	//CODES
-	const STATE_SUCCESS = 200;
-	const STATE_CREATE_SUCCESS = 201;
-	const STATE_URL_INCORRECT = 404;
-	const STATE_CREATE_FAIL = 400;
-	const STATE_FAIL_UNKNOWN = 500;
-	const STATE_ERROR_DB = 500;
-
 	//HTTP REQUEST GET
 	public static function get($request){
 		if($request[0] == 'getAll'){
@@ -38,7 +30,7 @@ class Task extends AbstractDAO {
 		if($request[0] == 'create'){
 			return parent::create();
 		}else{
-			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
@@ -47,7 +39,7 @@ class Task extends AbstractDAO {
 		if($request[0] == 'deleteById'){
 			return parent::deleteById($request[1]);
 		}else{
-			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
@@ -59,7 +51,7 @@ class Task extends AbstractDAO {
 		//crear usuari
 		$response = self::insert($task);
 		switch($response){
-			case self::STATE_CREATE_SUCCESS:
+			case parent::STATE_CREATE_SUCCESS:
 				http_response_code(200);
 				return
 					[
@@ -68,10 +60,10 @@ class Task extends AbstractDAO {
 					];
 				break;
 			case 400:
-				throw new ExceptionApi(self::STATE_CREATE_FAIL, "Ha sorgit un error");
+				throw new ExceptionApi(parent::STATE_CREATE_FAIL, "Ha sorgit un error");
 				break;
 			default:
-				throw new ExceptionApi(self::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
+				throw new ExceptionApi(parent::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
 
 		}
 	}
@@ -106,12 +98,12 @@ class Task extends AbstractDAO {
 			$result = $stmt->execute();
 
 			if($result){
-				return self::STATE_CREATE_SUCCESS;
+				return parent::STATE_CREATE_SUCCESS;
 			}else{
-				return self::STATE_CREATE_FAIL;
+				return parent::STATE_CREATE_FAIL;
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
@@ -130,7 +122,7 @@ class Task extends AbstractDAO {
 				return $task;
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
@@ -144,14 +136,14 @@ class Task extends AbstractDAO {
 			if($result){
 				http_response_code(200);
 				return [
-					"state" => self::STATE_SUCCESS,
+					"state" => parent::STATE_SUCCESS,
 					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
 				];
 			}else{
-				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+				throw new ExceptionApi(parent::STATE_ERROR, "S'ha produït un error");
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 

@@ -13,15 +13,6 @@ class Robot  extends AbstractDAO {
 	const LONGITUDE = "longitude";
 	const ID_CURRENT_STATUS = "id_current_status";
 
-	//CODES
-	const STATE_SUCCESS = 200;
-	const STATE_CREATE_SUCCESS = 201;
-	const STATE_URL_INCORRECT = 404;
-	const STATE_CREATE_FAIL = 400;
-	const STATE_ERROR_PARAMETERS = 422;
-	const STATE_FAIL_UNKNOWN = 500;
-	const STATE_ERROR_DB = 500;
-
 //HTTP REQUEST GET
 	public static function get($request){
 		if($request[0] == 'getAll'){
@@ -38,7 +29,7 @@ class Robot  extends AbstractDAO {
 		if($request[0] == 'deleteById'){
 			return parent::deleteById($request[1]);
 		}else{
-			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
@@ -46,21 +37,21 @@ class Robot  extends AbstractDAO {
 	public static function post($request){
 		if($request[0] == 'create'){
 			return parent::create();
-		}else if($request[0] == 'ip'){
+		}else if($request[0] == 'updateIp'){
 			$idRobot = $request[1];
 			$body = file_get_contents('php://input');
 			$robot = json_decode($body);
 			if(self::updateIP($idRobot, $robot) > 0){
 				http_response_code(200);
 				return [
-					"state" => self::STATE_SUCCESS,
+					"state" => parent::STATE_SUCCESS,
 					"message" => "Actualització IP del robot existosa"
 				];
 			} else {
-				throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
 			}
 		} else {
-			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
@@ -71,31 +62,31 @@ class Robot  extends AbstractDAO {
 			$idRobot = $request[1];
 			$body = file_get_contents('php://input');
 			$robot = json_decode($body);
-			if($route == "all"){
+			if($route == "updateAll"){
 				if(self::update($idRobot, $robot) > 0){
 					http_response_code(200);
 					return [
-						"state" => self::STATE_SUCCESS,
+						"state" => parent::STATE_SUCCESS,
 						"message" => "Actualització robot existosa"
 					];
 				}else{
-					throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
 				}
-			}else if($route == "ip"){
-				if(self::updateIP($idRobot, $robot) > 0){
+			}else if($route == "updateIp"){
+				if(parent::updateIP($idRobot, $robot) > 0){
 					http_response_code(200);
 					return [
-						"state" => self::STATE_SUCCESS,
+						"state" => parent::STATE_SUCCESS,
 						"message" => "Actualització IP del robot existosa"
 					];
 				}else{
-					throw new ExceptionApi(self::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
 				}
 			}else{
-				throw new ExceptionApi(self::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
+				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}
 		}else{
-			throw new ExceptionApi(self::STATE_ERROR_PARAMETERS, "Falta la ruta del robot", 422);
+			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del robot", 422);
 		}
 	}
 
@@ -128,12 +119,12 @@ class Robot  extends AbstractDAO {
 			$result = $stmt->execute();
 
 			if($result){
-				return self::STATE_CREATE_SUCCESS;
+				return parent::STATE_CREATE_SUCCESS;
 			}else{
-				return self::STATE_CREATE_FAIL;
+				return parent::STATE_CREATE_FAIL;
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
@@ -164,7 +155,7 @@ class Robot  extends AbstractDAO {
 
 			return $stmt->rowCount();
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
@@ -185,7 +176,7 @@ class Robot  extends AbstractDAO {
 
 			return $stmt->rowCount();
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 

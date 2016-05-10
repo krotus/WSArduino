@@ -10,13 +10,6 @@ class Process  extends AbstractDAO {
 	const CODE = "code";
 	const DESCRIPTION = "description";
 
-	//CODES
-	const STATE_SUCCESS = 200;
-	const STATE_CREATE_SUCCESS = 201;
-	const STATE_URL_INCORRECT = 404;
-	const STATE_CREATE_FAIL = 400;
-	const STATE_FAIL_UNKNOWN = 500;
-	const STATE_ERROR_DB = 500;
 
 	//HTTP REQUEST GET
 	public static function get($request){
@@ -25,7 +18,7 @@ class Process  extends AbstractDAO {
 		}else if($request[0] == 'getById'){
 			return self::getById($request[1]);
 		}else{
-			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
@@ -34,7 +27,7 @@ class Process  extends AbstractDAO {
 		if($request[0] == 'create'){
 			return parent::create();
 		}else{
-			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
@@ -43,7 +36,7 @@ class Process  extends AbstractDAO {
 		if($request[0] == 'deleteById'){
 			return parent::deleteById($request[1]);
 		}else{
-			throw new ExceptionApi(self::STATE_URL_INCORRECT, "Url mal formada", 400);
+			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
 	}
 
@@ -65,12 +58,12 @@ class Process  extends AbstractDAO {
 			$result = $stmt->execute();
 
 			if($result){
-				return self::STATE_CREATE_SUCCESS;
+				return parent::STATE_CREATE_SUCCESS;
 			}else{
-				return self::STATE_CREATE_FAIL;
+				return parent::STATE_CREATE_FAIL;
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 

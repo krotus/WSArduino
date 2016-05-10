@@ -20,12 +20,12 @@ abstract class AbstractDAO
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute(array(':id' => $id));
 			if($result){
-				return self::STATE_CREATE_SUCCESS;
+				return parent::STATE_CREATE_SUCCESS;
 			}else{
-				return self::STATE_CREATE_FAIL;
+				return parent::STATE_CREATE_FAIL;
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
@@ -39,12 +39,12 @@ abstract class AbstractDAO
 			if($resource){
 				http_response_code(200);
 				return [
-					"state" => self::STATE_SUCCESS,
+					"state" => parent::STATE_SUCCESS,
 					"data"	=> $resource
 				];
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
@@ -58,14 +58,14 @@ abstract class AbstractDAO
 			if($result){
 				http_response_code(200);
 				return [
-					"state" => self::STATE_SUCCESS,
+					"state" => parent::STATE_SUCCESS,
 					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
 				];
 			}else{
-				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+				throw new ExceptionApi(parent::STATE_ERROR, "S'ha produït un error");
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
@@ -77,7 +77,7 @@ abstract class AbstractDAO
 		//crear usuari
 		$response = static::insert($resource);
 		switch($response){
-			case self::STATE_CREATE_SUCCESS:
+			case parent::STATE_CREATE_SUCCESS:
 				http_response_code(200);
 				return
 					[
@@ -86,10 +86,10 @@ abstract class AbstractDAO
 					];
 				break;
 			case 400:
-				throw new ExceptionApi(self::STATE_CREATE_FAIL, "Ha sorgit un error");
+				throw new ExceptionApi(parent::STATE_CREATE_FAIL, "Ha sorgit un error");
 				break;
 			default:
-				throw new ExceptionApi(self::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
+				throw new ExceptionApi(parent::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
 
 		}
 	}
