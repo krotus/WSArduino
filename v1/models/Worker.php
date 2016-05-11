@@ -52,24 +52,24 @@ class Worker extends AbstractDAO {
 	public static function put($request){
 		if(!empty($request[0]) && !empty($request[1])){
 			$route = $request[0];
-			$idRobot = $request[1];
+			$idWorker = $request[1];
 			$body = file_get_contents('php://input');
-			$robot = json_decode($body);
+			$worker = json_decode($body);
 			if($route == "updateAll"){
-				if(self::update($idRobot, $robot) > 0){
+				if(self::update($idWorker, $worker) > 0){
 					http_response_code(200);
 					return [
 						"state" => parent::STATE_SUCCESS,
-						"message" => "Actualització robot existosa"
+						"message" => "Actualització treballador existosa"
 					];
 				}else{
-					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El treballador que intentes accedir no existeix",404);
 				}
 			}else{
 				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}
 		}else{
-			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del robot", 422);
+			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del treballador", 422);
 		}
 	}
 
