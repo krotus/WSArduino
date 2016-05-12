@@ -21,7 +21,9 @@ class Order extends AbstractDAO {
 		if($request[0] == 'getAll'){
 			return parent::getAll();
 		}else if($request[0] == 'getById'){
-			return self::getById($request[1]);
+			return parent::getById($request[1]);
+		}else if($request[0] == 'getByIdArduino'){
+			return self::getByIdArduino($request[1]);
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -91,7 +93,8 @@ class Order extends AbstractDAO {
 
 	public static function update(){}
 
-	public static function getById($id){
+	
+	public static function getByIdArduino($id){
 		try{
 			$db = new Database();
 			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE id = :id";
@@ -104,11 +107,11 @@ class Order extends AbstractDAO {
 				include_once("Process.php");
 				$process_class = new Process();
 				$process = $process_class::getById($id_process);
-				$ordre['id_process'] = $process['data']['description'];
+				$ordre['id_process'] = $process['data'][0]['id'];
 				if($process){
 					include_once("Point.php");
 					$point_class = new Point();
-					$points = $point_class::getAllByIdProcess(1);
+					$points = $point_class::getAllByIdProcess($ordre['id_process']);
 					if($points){
 						http_response_code(200);
 						return [

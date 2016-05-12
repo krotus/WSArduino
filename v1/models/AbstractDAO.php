@@ -40,7 +40,7 @@ abstract class AbstractDAO
 				http_response_code(200);
 				return [
 					"state" => self::STATE_SUCCESS,
-					"data"	=> $resource
+					"data"	=> array($resource)
 				];
 			}
 		}catch(PDOException $e){
