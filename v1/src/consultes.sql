@@ -1,6 +1,6 @@
 ﻿#update de totes les ordres per a que siguin per avui
 
-update orders set date = now();
+update orders set date = cast(concat(DATE_SUB(curdate(), INTERVAL -1 DAY), ' 00:00:00') as datetime;
 
 
 #update de les ordres amb tasca per a que totes siguin a dia d'avui, si és vol és pot escollir per treballador.
