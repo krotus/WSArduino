@@ -138,7 +138,7 @@ class Order extends AbstractDAO {
 
 	}
 
-	public function getOrdersByStatus($worker, $status)
+	public static function getOrdersByStatus($worker, $status)
 	{
 		try{ 
 			$db = new Database();
