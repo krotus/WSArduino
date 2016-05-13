@@ -142,7 +142,7 @@ class Order extends AbstractDAO {
 	{
 		try{ 
 			$db = new Database();
-			$sql = "SELECT o.id, o.code, o.description, o.priority, o.date, o.quantity, r.code, r.name, sr.description
+			$sql = "SELECT o.id, o.code as code_ord, o.description as desc_ord, o.priority, o.date, o.quantity, r.code as code_robot, r.name, sr.description as desc_sr
 FROM ". self::TABLE_NAME ." as o INNER JOIN status_order as so on o.id_status_order = so.id 
 INNER JOIN robots as r on id_robot = r.id
 INNER JOIN status_robot as sr on r.id_current_status = sr.id
