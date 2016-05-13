@@ -35,6 +35,32 @@ class StatusRobot extends AbstractDAO {
 		}
 	}
 
+	//HTTP REQUEST PUT
+	public static function put($request){
+		if(!empty($request[0]) && !empty($request[1])){
+			$route = $request[0];
+			$idStatusRobot = $request[1];
+			$body = file_get_contents('php://input');
+			$statusRobot = json_decode($body);
+			if($route == "updateAll"){
+				if(self::update($idStatusRobot, $statusRobot) > 0){
+					http_response_code(200);
+					return [
+						"state" => parent::STATE_SUCCESS,
+						"message" => "Actualització treballador existosa"
+					];
+				}else{
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El treballador que intentes accedir no existeix",404);
+				}
+			}else{
+				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
+			}
+		}else{
+			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del treballador", 422);
+		}
+	}
+
+
 	//METHOD CREATE CALLS INSERT FUNCTION
 	public static function create(){
 		$body = file_get_contents('php://input');
@@ -85,7 +111,25 @@ class StatusRobot extends AbstractDAO {
 	}
 
 
-	public static function update(){}
+	public static function update($id, $statusRobot){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::DESCRIPTION . " = :description" .
+			"WHERE " . self::ID . " = :id";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":description", $statusRobot->description);
+			$stmt->bindParam(":id", $id);
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function getById($id){
 		try{

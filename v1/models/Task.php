@@ -43,6 +43,34 @@ class Task extends AbstractDAO {
 		}
 	}
 
+	//HTTP REQUEST PUT
+	public static function put($request){
+		if(!empty($request[0]) && !empty($request[1])){
+			$route = $request[0];
+			$idTask = $request[1];
+			$body = file_get_contents('php://input');
+			$task = json_decode($body);
+			if($route == "updateAll"){
+				if(self::update($idTask, $task) > 0){
+					http_response_code(200);
+					return [
+						"state" => parent::STATE_SUCCESS,
+						"message" => "Actualització de tasca existosa"
+					];
+				}else{
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "La tasca que intentes accedir no existeix",404);
+				}
+			}else{
+				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
+			}
+		}else{
+			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta de la tasca", 422);
+		}
+	}
+
+
+
+
 	//METHOD CREATE CALLS INSERT FUNCTION
 	public static function create(){
 		$body = file_get_contents('php://input');
@@ -107,8 +135,36 @@ class Task extends AbstractDAO {
 		}
 	}
 
+	public static function update($id, $task){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::ID_TEAM . " = :id_team," .
+			self::ID_ORDER . " = :id_order," .
+			self::ID_WORKER . " = :id_worker," .
+			self::DATA_ASSIGNATION . " = :data_assignation," .
+			self::DATA_COMPLETION . " = :data_completion, " .
+			self::JUSTIFICATION . " = :justification" .
+			"WHERE " . self::ID . " = :id";
 
-	public static function update(){}
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":id_team", $task->team);
+			$stmt->bindParam(":id_order", $task->order);
+			$stmt->bindParam(":id_worker", $task->worker);
+			$stmt->bindParam(":data_assignation", $task->dateAssignation);
+			$stmt->bindParam(":data_completion", $task->dateCompletion);
+			$stmt->bindParam(":justification", $task->justification);
+			$stmt->bindParam(":id", $id);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function getById($id){
 		try{

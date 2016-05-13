@@ -79,22 +79,20 @@ class Worker extends AbstractDAO {
 			//creant la consulta UPDATE
 			$db = new Database();
 			$sql = "UPDATE " . self::TABLE_NAME . 
-			" SET " . self::ID . " = :id," .
-			self::USERNAME . " = :username," .
+			" SET " . self::USERNAME . " = :username," .
 			self::PASSWORD . " = :password," .
 			self::NIF . " = :nif," .
 			self::NAME . " = :name," .
-			self::SURNAME . " = :surname " .
-			self::MOBILE . " = :mobile " .
-			self::TELEPHONE . " = :telephone " .
-			self::CATEGORY . " = :category " .
-			self::ID_TEAM . " = :id_team " .
+			self::SURNAME . " = :surname, " .
+			self::MOBILE . " = :mobile," .
+			self::TELEPHONE . " = :telephone, " .
+			self::CATEGORY . " = :category, " .
+			self::ID_TEAM . " = :id_team, " .
 			self::IS_ADMIN . " = :is_admin " .
 			"WHERE " . self::ID . " = :id";
 
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam(":id", $worker->id);
 			$stmt->bindParam(":username", $worker->username);
 			$stmt->bindParam(":password", $worker->password);
 			$stmt->bindParam(":nif", $worker->nif);
