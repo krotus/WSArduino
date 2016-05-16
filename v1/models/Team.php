@@ -96,9 +96,8 @@ class Team  extends AbstractDAO {
 			$db = new Database();
 			$sql = "UPDATE " . self::TABLE_NAME . 
 			" SET " . self::CODE . " = :code," .
-			self::NAME . " = :name," .
+			self::NAME . " = :name " .
 			"WHERE " . self::ID . " = :id";
-
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":code", $team->code);
