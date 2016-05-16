@@ -113,6 +113,18 @@ switch ($method) {
 	case 'delete':
 		if ($resource == "workers") {
 			echo $view->prints(Worker::delete($request));
+		} else if($resource == "processes"){
+			echo $view->prints(Process::delete($request));
+		}else if($resource == "robots"){
+			echo $view->prints(Robot::delete($request));
+		}else if($resource == "teams") {
+			echo $view->prints(Team::delete($request));
+		}else if($resource == "status_order") {
+			echo $view->prints(StatusOrder::delete($request));
+		}else if($resource == "status_robot") {
+			echo $view->prints(StatusRobot::delete($request));
+		} else if ($resource == "orders") {
+			echo $view->prints(Order::delete($request));
 		}
 		break;
 	default:
