@@ -12,6 +12,7 @@ abstract class AbstractDAO
 	const STATE_CREATE_FAIL = 400;
 	const STATE_FAIL_UNKNOWN = 500;
 	const STATE_ERROR_DB = 500;
+	const STATE_ERROR_PARAMETERS = 422;
 
 	public static function deleteById($id){
 		try{

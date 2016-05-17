@@ -19,6 +19,18 @@ class Task extends AbstractDAO {
 			return parent::getAll();
 		}else if($request[0] == 'getById'){
 			return parent::getById($request[1]);
+		}else if($request[0] == "updateOrderTaskExecute"){
+			$idWorker = $request[1];
+			$idOrder = $request[2];
+			if(self::updateOrderTaskExecute($idWorker, $idOrder) > 0){
+				http_response_code(200);
+				return [
+					"state" => parent::STATE_SUCCESS,
+					"message" => "Actualització de tasca existosa"
+				];
+			}else{
+				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "La tasca que intentes accedir no existeix",404);
+			}			
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -60,19 +72,6 @@ class Task extends AbstractDAO {
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "La tasca que intentes accedir no existeix",404);
 				}
-			}else if($route == "updateOrderTaskExecute"){
-				$idWorker = $request[1];
-				$idOrder = $request[2];
-				if(self::updateOrderTaskExecute($idWorker, $idOrder) > 0){
-					http_response_code(200);
-					return [
-						"state" => parent::STATE_SUCCESS,
-						"message" => "Actualització de tasca existosa"
-					];
-				}else{
-					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "La tasca que intentes accedir no existeix",404);
-				}
-				
 			}else{
 				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}

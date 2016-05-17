@@ -28,6 +28,18 @@ class Order extends AbstractDAO {
 			$parm1 = $request[1];
 			$parm2 = $request[2];
 			return self::getOrdersByStatus($parm1, $parm2);
+		}else if($request[0] == "updateExecute"){
+			$idOrder = $request[1];
+			$idStatusOrder = $request[2];
+			if(self::executeByWorker($idOrder, $idStatusOrder) > 0){
+				http_response_code(200);
+				return [
+					"state" => parent::STATE_SUCCESS,
+					"message" => "Actualització order executada"
+				];
+			}else{
+				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
+			}
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -66,17 +78,6 @@ class Order extends AbstractDAO {
 					return [
 						"state" => parent::STATE_SUCCESS,
 						"message" => "Actualització order existosa"
-					];
-				}else{
-					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
-				}
-			}else if($route == "updateExecute"){
-				$idStatusOrder = $request[2];
-				if(self::executeByWorker($idOrder, $idStatusOrder) > 0){
-					http_response_code(200);
-					return [
-						"state" => parent::STATE_SUCCESS,
-						"message" => "Actualització order executada"
 					];
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
@@ -170,10 +171,10 @@ class Order extends AbstractDAO {
 
 	public static function executeByWorker($idOrder, $idStatus){
 		try{
-			//creant la consulta UPDATE
+			//creant la consulta GET pero hauria de ser UPDATE
 			$db = new Database();
 			$sql = "UPDATE " . self::TABLE_NAME . 
-			" SET " . self::ID_STATUS_ORDER . " = :id_status_order," .
+			" SET " . self::ID_STATUS_ORDER . " = :id_status_order " .
 			"WHERE " . self::ID . " = :id";
 
 			//prerarem la sentencia
