@@ -1,6 +1,6 @@
 ﻿#update de totes les ordres per a que siguin per avui
 
-update orders set date = cast(concat(curdate(), " 23:59:59") as datetime)
+update orders set date = cast(concat(curdate(), " 23:59:59") as datetime);
 
 
 #update de les ordres amb tasca per a que totes siguin a dia d'avui, si és vol és pot escollir per treballador.
@@ -59,3 +59,58 @@ select robots.code, robots.name, concat(robots.latitude,'/',robots.longitude) as
 
 from robots 
 join status_robot on status_robot.id = robots.id_current_status
+
+#4
+
+select processes.code, processes.description, points.pos_x, points.pos_y, points.pos_z, 
+case 
+	when points.tweezer = 0 then 'tancada' 
+    when points.tweezer = 1 then 'oberta' end as pinca 
+from processes
+join points on points.id_process = processes.id
+
+#5
+
+select orders.code as order_code,  
+orders.description as order_description,
+orders.priority as order_priority,
+orders.date as order_date,
+processes.description as process_description,
+orders.quantity as order_quantity,
+robots.name as robot_name,
+robots.code as robot_code,
+status_order.description as status_order_description
+
+from orders
+join processes on processes.id = orders.id_process
+join robots on robots.id = orders.id_robot
+join status_order on status_order.id = orders.id_status_order
+
+#8.1
+select concat(workers.name, workers.surname) as workers_user,
+teams.name as team_name,
+orders.code as order_code,  
+orders.description as order_description,
+orders.priority as order_priority,
+orders.date as order_date,
+processes.description as process_description,
+orders.quantity as order_quantity,
+robots.name as robot_name,
+robots.code as robot_code,
+status_order.description as status_order_description
+
+from orders
+join processes on processes.id = orders.id_process
+join robots on robots.id = orders.id_robot 
+	and (robots.name like 'First Robot' or robots.code = 100) 
+join status_order on status_order.id = orders.id_status_order 
+	and status_order.description = 'pending'
+left join tasks on tasks.id_order = orders.id
+left join workers on workers.id = tasks.id_worker
+left join teams on teams.id = tasks.id_team
+
+where teams.name = 'EquipA' 
+	and (workers.name = 'Andreu' or workers.surname = 'Andreu' or 'Andreu' = '')
+
+#8.2
+
