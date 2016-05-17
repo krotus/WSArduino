@@ -31,11 +31,12 @@ class Order extends AbstractDAO {
 		}else if($request[0] == "updateExecute"){
 			$idOrder = $request[1];
 			$idStatusOrder = $request[2];
-			if(self::executeByWorker($idOrder, $idStatusOrder) > 0){
+			$idWorker = $request[3];
+			if(self::executeByWorker($idOrder, $idStatusOrder, $idWorker) > 0){
 				http_response_code(200);
 				return [
 					"state" => parent::STATE_SUCCESS,
-					"message" => "Actualització order executada"
+					"message" => "Actualització order i tasca executada"
 				];
 			}else{
 				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
@@ -169,7 +170,7 @@ class Order extends AbstractDAO {
 		}
 	}
 
-	public static function executeByWorker($idOrder, $idStatus){
+	public static function executeByWorker($idOrder, $idStatus, $idWorker){
 		try{
 			//creant la consulta GET pero hauria de ser UPDATE
 			$db = new Database();
@@ -183,6 +184,9 @@ class Order extends AbstractDAO {
 			$stmt->bindParam(":id", $idOrder);
 
 			$stmt->execute();
+
+			$task = new Task();
+			$task->updateOrderTaskExecute($idWorker, $idOrder);
 
 			return $stmt->rowCount();
 		}catch(PDOException $e){
