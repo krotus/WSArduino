@@ -210,8 +210,13 @@ INNER JOIN tasks as t on t.id_order = o.id
 INNER JOIN teams as te on t.id_team = te.id
 INNER JOIN workers as w on w.id_team = te.id
 INNER JOIN processes as pr on o.id_process = pr.id
-WHERE w.id = :worker AND so.description = :stat 
-and o.date BETWEEN now() AND cast(concat(DATE_SUB(curdate(), INTERVAL -1 DAY), ' 00:00:00') as datetime)";
+WHERE w.id = :worker AND so.description = :stat ";
+if ($status == "uncompleted") {
+	$sql = $sql .";";
+}else{
+	$sql = $sql ."and o.date BETWEEN now() AND cast(concat(DATE_SUB(curdate(), INTERVAL -1 DAY), ' 00:00:00') as datetime);";
+
+}
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(':worker', $worker);
 			$stmt->bindParam(':stat', $status);
