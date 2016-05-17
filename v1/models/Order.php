@@ -115,7 +115,7 @@ class Order extends AbstractDAO {
 				if($process){
 					include_once("Point.php");
 					$point_class = new Point();
-					$points = $point_class::getAllByIdProcess($ordre['id_process']);
+					$points = $point_class::getAllByIdProcessArduino($ordre['id_process']);
 					if($points){
 						http_response_code(200);
 						return [
