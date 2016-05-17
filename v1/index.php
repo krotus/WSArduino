@@ -22,7 +22,7 @@ $db = new Database();
 // Obtenim el recurs a partir de la petició
 $request = explode("/", $_GET['PATH_INFO']);
 $resource = array_shift($request);
-$existing_resources = array('orders','points','processes','robots','status_order','status_robot','task','teams','workers');
+$existing_resources = array('orders','points','processes','robots','status_order','status_robot','tasks','teams','workers');
 
 // COmprovem si existeix el recurs especificat
 if(!in_array($resource, $existing_resources)){
