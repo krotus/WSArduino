@@ -1,6 +1,6 @@
 ﻿#update de totes les ordres per a que siguin per avui
 
-update orders set date = cast(concat(DATE_SUB(curdate(), INTERVAL -1 DAY), ' 00:00:00') as datetime;
+update orders set date = cast(concat(curdate(), " 23:59:59") as datetime)
 
 
 #update de les ordres amb tasca per a que totes siguin a dia d'avui, si és vol és pot escollir per treballador.
@@ -35,3 +35,27 @@ join status_order on status_order.id = orders.id_status_order and status_order.i
 join tasks on tasks.id_order = orders.id;
 
 update tasks set date_completion = now() where tasks.id in (select * from a00);
+
+
+#1
+
+#select nif, name, surname, telephone, category 
+
+#from workers;
+
+
+
+#2
+
+#select teams.code, teams.name,  concat(workers.name, ' ', workers.surname) as worker
+
+#from teams
+#join workers on workers.id_team = teams.id
+
+
+
+#3
+select robots.code, robots.name, concat(robots.latitude,'/',robots.longitude) as ubication, status_robot.description as stat
+
+from robots 
+join status_robot on status_robot.id = robots.id_current_status
