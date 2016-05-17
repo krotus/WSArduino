@@ -70,6 +70,17 @@ class Order extends AbstractDAO {
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
 				}
+			}else if($route == "updateExecute"){
+				$idStatusOrder = $request[2];
+				if(self::executeByWorker($idOrder, $idStatusOrder) > 0){
+					http_response_code(200);
+					return [
+						"state" => parent::STATE_SUCCESS,
+						"message" => "Actualització order executada"
+					];
+				}else{
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
+				}
 			}else{
 				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}
@@ -157,6 +168,26 @@ class Order extends AbstractDAO {
 		}
 	}
 
+	public static function executeByWorker($idOrder, $idStatus){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::ID_STATUS_ORDER . " = :id_status_order," .
+			"WHERE " . self::ID . " = :id";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":id_status_order", $idStatus);
+			$stmt->bindParam(":id", $idOrder);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 	
 	public static function getByIdArduino($id){
 		try{

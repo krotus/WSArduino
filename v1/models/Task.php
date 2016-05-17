@@ -60,6 +60,19 @@ class Task extends AbstractDAO {
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "La tasca que intentes accedir no existeix",404);
 				}
+			}else if($route == "updateOrderTaskExecute"){
+				$idWorker = $request[1];
+				$idOrder = $request[2];
+				if(self::updateOrderTaskExecute($idWorker, $idOrder) > 0){
+					http_response_code(200);
+					return [
+						"state" => parent::STATE_SUCCESS,
+						"message" => "Actualització de tasca existosa"
+					];
+				}else{
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "La tasca que intentes accedir no existeix",404);
+				}
+				
 			}else{
 				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}
@@ -157,6 +170,27 @@ class Task extends AbstractDAO {
 			$stmt->bindParam(":data_completion", $task->dateCompletion);
 			$stmt->bindParam(":justification", $task->justification);
 			$stmt->bindParam(":id", $id);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+	public static function updateOrderTaskExecute($idWorker, $idOrder){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::ID_WORKER . " = :id_worker," .
+			"WHERE " . self::ID_ORDER . " = :id_order";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":id_worker", $idWorker);
+			$stmt->bindParam(":id_order", $idOrder);
 
 			$stmt->execute();
 
