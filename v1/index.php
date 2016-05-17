@@ -9,6 +9,7 @@ require("models/Worker.php");
 require("models/Process.php");
 require("models/Robot.php");
 require("models/Team.php");
+require("models/Task.php");
 require("models/StatusOrder.php");
 require("models/StatusRobot.php");
 
@@ -66,6 +67,8 @@ switch ($method) {
 			echo $view->prints(Robot::get($request));
 		}else if($resource == "teams") {
 			echo $view->prints(Team::get($request));
+		}else if($resource == "tasks") {
+			echo $view->prints(Task::get($request));
 		}else if($resource == "status_order") {
 			echo $view->prints(StatusOrder::get($request));
 		}else if($resource == "status_robot") {
@@ -85,6 +88,8 @@ switch ($method) {
 			echo $view->prints(Robot::post($request));
 		}else if($resource == "teams") {
 			echo $view->prints(Team::post($request));
+		}else if($resource == "tasks") {
+			echo $view->prints(Task::post($request));	
 		}else if($resource == "status_order") {
 			echo $view->prints(StatusOrder::post($request));
 		}else if($resource == "status_robot") {
@@ -104,6 +109,8 @@ switch ($method) {
 			echo $view->prints(Robot::put($request));
 		}else if($resource == "teams") {
 			echo $view->prints(Team::put($request));
+		}else if($resource == "tasks") {
+			echo $view->prints(Task::put($request));
 		}else if($resource == "status_order") {
 			echo $view->prints(StatusOrder::put($request));
 		}else if($resource == "status_robot") {
@@ -119,6 +126,8 @@ switch ($method) {
 			echo $view->prints(Robot::delete($request));
 		}else if($resource == "teams") {
 			echo $view->prints(Team::delete($request));
+		}else if($resource == "tasks") {
+			echo $view->prints(Task::delete($request));
 		}else if($resource == "status_order") {
 			echo $view->prints(StatusOrder::delete($request));
 		}else if($resource == "status_robot") {

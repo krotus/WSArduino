@@ -183,7 +183,7 @@ class Task extends AbstractDAO {
 			//creant la consulta UPDATE
 			$db = new Database();
 			$sql = "UPDATE " . self::TABLE_NAME . 
-			" SET " . self::ID_WORKER . " = :id_worker," .
+			" SET " . self::ID_WORKER . " = :id_worker " .
 			"WHERE " . self::ID_ORDER . " = :id_order";
 
 			//prerarem la sentencia
