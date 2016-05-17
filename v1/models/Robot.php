@@ -169,7 +169,7 @@ class Robot  extends AbstractDAO {
 
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam(":ip_address", $robot->ip_address);
+			$stmt->bindParam(":ip_address", $robot->ipAddress);
 			$stmt->bindParam(":id", $id);
 
 			$stmt->execute();

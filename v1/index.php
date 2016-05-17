@@ -74,15 +74,15 @@ switch ($method) {
 	break;
 	case 'post':
 		if ($resource == "orders") {
-			$view->prints(Order::post($request));
+			echo $view->prints(Order::post($request));
 		}else if($resource == "points"){
-			$view->prints(Point::post($request));
+			echo $view->prints(Point::post($request));
 		}else if($resource == "workers"){
-			$view->prints(Worker::post($request));
+			echo $view->prints(Worker::post($request));
 		}else if($resource == "processes"){
-			$view->prints(Process::post($request));
+			echo $view->prints(Process::post($request));
 		}else if($resource == "robots"){
-			$view->prints(Robot::post($request));
+			echo $view->prints(Robot::post($request));
 		}else if($resource == "teams") {
 			echo $view->prints(Team::post($request));
 		}else if($resource == "status_order") {
@@ -92,13 +92,39 @@ switch ($method) {
 		}
 		break;
 	case 'put':
-		if($resource == "robots"){
-			$view->prints(Robot::put($request));
+		if ($resource == "orders") {
+			echo $view->prints(Order::put($request));
+		}else if($resource == "points"){
+			echo $view->prints(Point::put($request));
+		}else if($resource == "workers"){
+			echo $view->prints(Worker::put($request));
+		}else if($resource == "processes"){
+			echo $view->prints(Process::put($request));
+		}else if($resource == "robots"){
+			echo $view->prints(Robot::put($request));
+		}else if($resource == "teams") {
+			echo $view->prints(Team::put($request));
+		}else if($resource == "status_order") {
+			echo $view->prints(StatusOrder::put($request));
+		}else if($resource == "status_robot") {
+			echo $view->prints(StatusRobot::put($request));
 		}
 		break;
 	case 'delete':
 		if ($resource == "workers") {
-			$view->prints(Worker::delete($request));
+			echo $view->prints(Worker::delete($request));
+		} else if($resource == "processes"){
+			echo $view->prints(Process::delete($request));
+		}else if($resource == "robots"){
+			echo $view->prints(Robot::delete($request));
+		}else if($resource == "teams") {
+			echo $view->prints(Team::delete($request));
+		}else if($resource == "status_order") {
+			echo $view->prints(StatusOrder::delete($request));
+		}else if($resource == "status_robot") {
+			echo $view->prints(StatusRobot::delete($request));
+		} else if ($resource == "orders") {
+			echo $view->prints(Order::delete($request));
 		}
 		break;
 	default:

@@ -150,6 +150,22 @@ class Point extends AbstractDAO {
 		}
 	}
 
+	public static function getAllByIdProcessArduino($idProcess){
+		try{
+			$db = new Database();
+			$sql = "SELECT pos_x,pos_y, pos_z, tweezer FROM " . self::TABLE_NAME . " WHERE ". self::ID_PROCESS ." = :idProcess";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array(':idProcess' => $idProcess));
+			$points = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($points){
+				http_response_code(200);
+				return $points;
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
 }
 
 ?>

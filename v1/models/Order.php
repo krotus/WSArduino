@@ -53,10 +53,36 @@ class Order extends AbstractDAO {
 		}
 	}
 
+	//HTTP REQUEST PUT
+	public static function put($request){
+		if(!empty($request[0]) && !empty($request[1])){
+			$route = $request[0];
+			$idOrder = $request[1];
+			$body = file_get_contents('php://input');
+			$order = json_decode($body);
+			if($route == "updateAll"){
+				if(self::update($idOrder, $order) > 0){
+					http_response_code(200);
+					return [
+						"state" => parent::STATE_SUCCESS,
+						"message" => "Actualització order existosa"
+					];
+				}else{
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
+				}
+			}else{
+				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
+			}
+		}else{
+			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del order", 422);
+		}
+	}
+
 	public static function insert($order){
 		$code = $order->code;
 		$description = $order->description;
 		$priority = $order->priority;
+		$date = $order->date;
 		$quantity = $order->quantity;
 		$idStatusOrder = $order->statusOrder;
 		$idRobot = $order->robot;
@@ -71,12 +97,13 @@ class Order extends AbstractDAO {
 				self::ID_STATUS_ORDER . "," .
 				self::ID_ROBOT . "," .
 				self::ID_PROCESS . ")" .
-				" VALUES(:code,:description,:priority,:quantity,:id_status_order,:id_robot,:id_process)";
+				" VALUES(:code,:description,:priority,:date,:quantity,:id_status_order,:id_robot,:id_process)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":code", $code);
 			$stmt->bindParam(":description", $description);
 			$stmt->bindParam(":priority", $priority);
+			$stmt->bindParam(":date", $date);
 			$stmt->bindParam(":quantity", $quantity);
 			$stmt->bindParam(":id_status_order", $idStatusOrder);
 			$stmt->bindParam(":id_robot", $idRobot);
@@ -95,7 +122,40 @@ class Order extends AbstractDAO {
 	}
 
 
-	public static function update(){}
+	public static function update($id, $order){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::CODE . " = :code," .
+			self::DESCRIPTION . " = :description," .
+			self::PRIORITY . " = :priority," .
+			self::DATE . " = :date," .
+			self::QUANTITY . " = :quantity," .
+			self::ID_STATUS_ORDER . " = :id_status_order," .
+			self::ID_ROBOT . " = :id_robot," .
+			self::ID_PROCESS . " = :id_process " .
+			"WHERE " . self::ID . " = :id";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":code", $order->code);
+			$stmt->bindParam(":description", $order->description);
+			$stmt->bindParam(":priority", $order->priority);
+			$stmt->bindParam(":date", $order->date);
+			$stmt->bindParam(":quantity", $order->quantity);
+			$stmt->bindParam(":id_status_order", $order->idStatusOrder);
+			$stmt->bindParam(":id_robot", $order->idRobot);
+			$stmt->bindParam(":id_process", $order->idProcess);
+			$stmt->bindParam(":id", $id);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	
 	public static function getByIdArduino($id){
@@ -115,7 +175,7 @@ class Order extends AbstractDAO {
 				if($process){
 					include_once("Point.php");
 					$point_class = new Point();
-					$points = $point_class::getAllByIdProcess($ordre['id_process']);
+					$points = $point_class::getAllByIdProcessArduino($ordre['id_process']);
 					if($points){
 						http_response_code(200);
 						return [
@@ -142,7 +202,7 @@ class Order extends AbstractDAO {
 	{
 		try{ 
 			$db = new Database();
-			$sql = "SELECT o.id, o.code, o.description, o.priority, o.date, o.quantity, r.code, r.name, sr.description
+			$sql = "SELECT DISTINCT o.id, o.code as code_ord, o.description as desc_ord, o.priority, o.date, o.quantity, r.code as code_robot, r.name, sr.description as desc_sr
 FROM ". self::TABLE_NAME ." as o INNER JOIN status_order as so on o.id_status_order = so.id 
 INNER JOIN robots as r on id_robot = r.id
 INNER JOIN status_robot as sr on r.id_current_status = sr.id
