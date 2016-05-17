@@ -12,6 +12,7 @@ class ViewJson extends ViewApi{
 			http_response_code($this->state);
 		}
 		header("Content-Type: application/json; charset=utf8");
+		header("Access-Control-Allow-Origin: *");
 		//echo json_encode($body, JSON_PRETTY_PRINT);
 		echo json_encode($body,JSON_UNESCAPED_UNICODE);
 		
