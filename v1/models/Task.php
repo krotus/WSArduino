@@ -9,8 +9,8 @@ class Task extends AbstractDAO {
 	const ID_TEAM = "id_team";
 	const ID_ORDER = "id_order";
 	const ID_WORKER = "id_worker";
-	const DATA_ASSIGNATION = "data_assignation";
-	const DATA_COMPLETION = "data_completion";
+	const DATE_ASSIGNATION = "date_assignation";
+	const DATE_COMPLETION = "date_completion";
 	const JUSTIFICATION = "justification";
 
 	//HTTP REQUEST GET
@@ -122,8 +122,8 @@ class Task extends AbstractDAO {
 				self::ID_TEAM . "," .
 				self::ID_ORDER . "," .
 				self::ID_WORKER . "," .
-				self::DATA_ASSIGNATION . "," .
-				self::DATA_COMPLETION . "," .
+				self::DATE_ASSIGNATION . "," .
+				self::DATE_COMPLETION . "," .
 				self::JUSTIFICATION . ")" .
 				" VALUES(:id_team,:id_order,:id_worker,:date_assignation,:date_completion,:justification)";
 
@@ -155,8 +155,8 @@ class Task extends AbstractDAO {
 			" SET " . self::ID_TEAM . " = :id_team," .
 			self::ID_ORDER . " = :id_order," .
 			self::ID_WORKER . " = :id_worker," .
-			self::DATA_ASSIGNATION . " = :data_assignation," .
-			self::DATA_COMPLETION . " = :data_completion, " .
+			self::DATE_ASSIGNATION . " = :date_assignation," .
+			self::DATE_COMPLETION . " = :date_completion, " .
 			self::JUSTIFICATION . " = :justification" .
 			"WHERE " . self::ID . " = :id";
 
@@ -165,8 +165,8 @@ class Task extends AbstractDAO {
 			$stmt->bindParam(":id_team", $task->team);
 			$stmt->bindParam(":id_order", $task->order);
 			$stmt->bindParam(":id_worker", $task->worker);
-			$stmt->bindParam(":data_assignation", $task->dateAssignation);
-			$stmt->bindParam(":data_completion", $task->dateCompletion);
+			$stmt->bindParam(":date_assignation", $task->dateAssignation);
+			$stmt->bindParam(":date_completion", $task->dateCompletion);
 			$stmt->bindParam(":justification", $task->justification);
 			$stmt->bindParam(":id", $id);
 
@@ -201,17 +201,18 @@ class Task extends AbstractDAO {
 
 	public static function updateTaskCompleted($idOrder,$date){
 		try{
+
 			//creant la consulta UPDATE
 			$db = new Database();
 			$sql = "UPDATE " . self::TABLE_NAME . 
-			" SET " . self::DATA_COMPLETION . " = :dataCompletion " .
+			" SET " . self::DATE_COMPLETION . " = '2016-05-18 17:42:00' " .
 			"WHERE " . self::ID_ORDER . " = :id_order";
 
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
-			$stmt->bindParam(":dataCompletion", $date);
-			$stmt->bindParam(":id_order", $idOrder);
 
+			$stmt->bindParam(":date_completion", $date);
+			$stmt->bindParam(":id_order", $idOrder);
 			$stmt->execute();
 
 			return $stmt->rowCount();
