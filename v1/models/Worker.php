@@ -97,15 +97,14 @@ class Worker extends AbstractDAO {
 			$stmt->bindParam(":password", $worker->password);
 			$stmt->bindParam(":nif", $worker->nif);
 			$stmt->bindParam(":name", $worker->name);
+			$stmt->bindParam(":surname", $worker->surname);
 			$stmt->bindParam(":mobile", $worker->mobile);
 			$stmt->bindParam(":telephone", $worker->telephone);
 			$stmt->bindParam(":category", $worker->category);
 			$stmt->bindParam(":id_team", $worker->team);
 			$stmt->bindParam(":is_admin", $worker->isAdmin);
 			$stmt->bindParam(":id", $id);
-
 			$stmt->execute();
-
 			return $stmt->rowCount();
 		}catch(PDOException $e){
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());

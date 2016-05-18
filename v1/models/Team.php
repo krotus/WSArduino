@@ -41,6 +41,7 @@ class Team  extends AbstractDAO {
 		if(!empty($request[0]) && !empty($request[1])){
 			$route = $request[0];
 			$idTeam = $request[1];
+			echo $route;
 			$body = file_get_contents('php://input');
 			$team = json_decode($body);
 			if($route == "updateAll"){
