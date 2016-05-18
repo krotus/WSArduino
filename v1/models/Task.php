@@ -205,16 +205,15 @@ class Task extends AbstractDAO {
 			//creant la consulta UPDATE
 			$db = new Database();
 			$sql = "UPDATE " . self::TABLE_NAME . 
-			" SET " . self::DATE_COMPLETION . " = '2016-05-18 17:42:00' " .
+			" SET " . self::DATE_COMPLETION . " = :date_completion " .
 			"WHERE " . self::ID_ORDER . " = :id_order";
 
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
-
 			$stmt->bindParam(":date_completion", $date);
 			$stmt->bindParam(":id_order", $idOrder);
+			
 			$stmt->execute();
-
 			return $stmt->rowCount();
 		}catch(PDOException $e){
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
