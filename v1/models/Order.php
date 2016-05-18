@@ -33,6 +33,7 @@ class Order extends AbstractDAO {
 					"state" => parent::STATE_SUCCESS,
 					"message" => "Actualització order i tasca executada"
 				];
+			}
 		}else if($request[0] == 'getOrdersByStatus'){
 			$parm1 = $request[1];
 			$parm2 = $request[2];
