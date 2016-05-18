@@ -83,6 +83,18 @@ class Order extends AbstractDAO {
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
 				}
+			}else if($route == "updateExecute"){
+				$idStatusOrder = $request[2];
+				$idWorker = $request[3];
+				if(self::executeByWorker($idOrder, $idStatusOrder, $idWorker) > 0){
+					http_response_code(200);
+					return [
+						"state" => parent::STATE_SUCCESS,
+						"message" => "Actualització order i tasca executada"
+					];
+				}else{
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
+				}
 			}else{
 				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}

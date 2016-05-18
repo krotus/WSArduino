@@ -2,6 +2,7 @@
 
 require("utilities/Database.php");
 require("views/ViewJson.php");
+require("views/ViewXML.php");
 require("models/AbstractDAO.php");
 require("models/Order.php");
 require("models/Point.php");
