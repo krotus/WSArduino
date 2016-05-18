@@ -199,6 +199,50 @@ class Task extends AbstractDAO {
 		}
 	}
 
+	public static function updateTaskCompleted($idOrder,$date){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::DATA_COMPLETION . " = :dataCompletion " .
+			"WHERE " . self::ID_ORDER . " = :id_order";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":dataCompletion", $date);
+			$stmt->bindParam(":id_order", $idOrder);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+	public static function updateTaskCancelled($idOrder,$justification){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::JUSTIFICATION . " = :justification " .
+			"WHERE " . self::ID_ORDER . " = :id_order";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":justification", $justification);
+			$stmt->bindParam(":id_order", $idOrder);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+
+
 	public static function getById($id){
 		try{
 			$db = new Database();

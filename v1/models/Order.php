@@ -24,6 +24,15 @@ class Order extends AbstractDAO {
 			return parent::getById($request[1]);
 		}else if($request[0] == 'getByIdArduino'){
 			return self::getByIdArduino($request[1]);
+		}else if($request[0] == 'completedByTask'){
+			$idOrder = $request[1];
+			$idStatusOrder = $request[2];
+			if(self::completedByTask($idOrder, $idStatusOrder) > 0){
+				http_response_code(200);
+				return [
+					"state" => parent::STATE_SUCCESS,
+					"message" => "Actualització order i tasca executada"
+				];
 		}else if($request[0] == 'getOrdersByStatus'){
 			$parm1 = $request[1];
 			$parm2 = $request[2];
@@ -196,15 +205,41 @@ class Order extends AbstractDAO {
 			$stmt->bindParam(":id", $idOrder);
 
 			$stmt->execute();
-
-			$task = new Task();
-			$task->updateOrderTaskExecute($idWorker, $idOrder);
+			Task::updateOrderTaskExecute($idWorker, $idOrder);
 
 			return $stmt->rowCount();
 		}catch(PDOException $e){
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
+
+	public static function completedByTask($idOrder, $idStatus){
+		try{
+			//creant la consulta GET pero hauria de ser UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::ID_STATUS_ORDER . " = :id_status_order " .
+			"WHERE " . self::ID . " = :id";
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":id_status_order", $idStatus);
+			$stmt->bindParam(":id", $idOrder);
+			$stmt->execute();
+			$extraData = $_GET['dataExtra'];
+			if ($idStatus == 3) {
+				Task::updateTaskCompleted($idOrder,$extraData);
+			} else if ($idStatus == 5) {
+				Task::updateTaskCancelled($idOrder,$extraData);
+			}
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+
+
+
 	
 	public static function getByIdArduino($id){
 		try{
