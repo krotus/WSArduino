@@ -80,34 +80,6 @@ class Task extends AbstractDAO {
 		}
 	}
 
-
-
-
-	//METHOD CREATE CALLS INSERT FUNCTION
-	public static function create(){
-		$body = file_get_contents('php://input');
-		$task = json_decode($body);
-		//validar camps
-		//crear usuari
-		$response = self::insert($task);
-		switch($response){
-			case parent::STATE_CREATE_SUCCESS:
-				http_response_code(200);
-				return
-					[
-						"state" => 200,
-						"message" => utf8_encode("Register success.")
-					];
-				break;
-			case 400:
-				throw new ExceptionApi(parent::STATE_CREATE_FAIL, "Ha sorgit un error");
-				break;
-			default:
-				throw new ExceptionApi(parent::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
-
-		}
-	}
-
 	//TODO
 	public static function insert($task){
 		$team = $task->team;
