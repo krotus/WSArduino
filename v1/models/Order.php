@@ -127,7 +127,6 @@ class Order extends AbstractDAO {
 		$code = $order->code;
 		$description = $order->description;
 		$priority = $order->priority;
-		$date = $order->date;
 		$quantity = $order->quantity;
 		$idStatusOrder = $order->statusOrder;
 		$idRobot = $order->robot;
@@ -138,11 +137,12 @@ class Order extends AbstractDAO {
 				self::CODE . "," .
 				self::DESCRIPTION . "," .
 				self::PRIORITY . "," .
+				self::DATE . "," .
 				self::QUANTITY . "," .
 				self::ID_STATUS_ORDER . "," .
 				self::ID_ROBOT . "," .
 				self::ID_PROCESS . ")" .
-				" VALUES(:code,:description,:priority,now(),:quantity,:id_status_order,:id_robot,:id_process)";
+				" VALUES(:code,:description,:priority,NOW(),:quantity,:id_status_order,:id_robot,:id_process)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":code", $code);
