@@ -188,9 +188,9 @@ class Order extends AbstractDAO {
 			$stmt->bindParam(":priority", $order->priority);
 			$stmt->bindParam(":date", $order->date);
 			$stmt->bindParam(":quantity", $order->quantity);
-			$stmt->bindParam(":id_status_order", $order->idStatusOrder);
-			$stmt->bindParam(":id_robot", $order->idRobot);
-			$stmt->bindParam(":id_process", $order->idProcess);
+			$stmt->bindParam(":id_status_order", $order->statusOrder);
+			$stmt->bindParam(":id_robot", $order->robot);
+			$stmt->bindParam(":id_process", $order->process);
 			$stmt->bindParam(":id", $id);
 
 			$stmt->execute();
