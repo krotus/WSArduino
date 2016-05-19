@@ -48,8 +48,8 @@ class Team  extends AbstractDAO {
 				if(self::update($idTeam, $team) > 0){
 					http_response_code(200);
 					return [
-						"state" => parent::STATE_SUCCESS,
-						"message" => "Actualització equip existosa"
+					"state" => parent::STATE_SUCCESS,
+					"message" => "Actualització equip existosa"
 					];
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El equip que intentes accedir no existeix",404);
@@ -62,7 +62,30 @@ class Team  extends AbstractDAO {
 		}
 	}
 
+	public static function getAllTeamsAdmin(){
+		try{ 
+			$db = new Database();
+			$sql = "select " . self::TABLE_NAME . ".". self::CODE .",
+			" . self::TABLE_NAME . "." . self::NAME .", 
+			concat(workers.name, ' ', workers.surname) as worker
+			from " . self::TABLE_NAME . "
+			inner join workers on workers.id_team = ". self::TABLE_NAME ."."self::ID";";
+			$stmt = $db->prepare($sql);
+			$result = $stmt->execute();
 
+			if($result){
+				http_response_code(200);
+				return [
+				"state" => self::STATE_SUCCESS,
+				"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function insert($team){
 		$code = $team->code;
@@ -70,9 +93,9 @@ class Team  extends AbstractDAO {
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
-				self::CODE . "," .
-				self::NAME . ")" .
-				" VALUES(:code,:name)";
+			self::CODE . "," .
+			self::NAME . ")" .
+			" VALUES(:code,:name)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":code", $code);
@@ -116,4 +139,4 @@ class Team  extends AbstractDAO {
 
 }
 
- ?>
+?>

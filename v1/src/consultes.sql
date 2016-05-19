@@ -89,7 +89,8 @@ inner join points on points.id_process = processes.id
 
 #5
 
-select orders.code as order_code,  
+select orders.id as order_id,
+orders.code as order_code,  
 orders.description as order_description,
 orders.priority as order_priority,
 orders.date as order_date,
@@ -129,6 +130,7 @@ left join teams on teams.id = tasks.id_team
 
 where teams.name = 'EquipA' 
 	and (workers.name = 'Andreu' or workers.surname = 'Andreu' or 'Andreu' = '')
+	and orders.date between date_format(curdate(),'%Y-01-01') and curdate();
 
 #8.2
 

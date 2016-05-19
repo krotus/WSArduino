@@ -78,7 +78,8 @@ class Worker extends AbstractDAO {
 	public static function getAllWorkersAdmin(){
 		try{ 
 			$db = new Database();
-			$sql = "select " . self::TABLE_NAME . ".". self::USERNAME .",
+			$sql = "select " . self::TABLE_NAME . ".". self::ID .",
+			" . self::TABLE_NAME . ".". self::USERNAME .",
 			" . self::TABLE_NAME . "." . self::NIF .", 
 			" . self::TABLE_NAME . "." . self::NAME .", 
 			" . self::TABLE_NAME . "." . self::SURNAME .", 
