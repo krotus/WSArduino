@@ -137,9 +137,9 @@ public static function getAllOrdersAdmin(){
 			robots.code as robot_code,
 			status_order.description as status_order_description
 			from " . self::TABLE_NAME . "
-			 inner join processes on processes.id = ". self::TABLE_NAME .".id_process".
-			 "inner join robots on robots.id = ". self::TABLE_NAME .".id_robot".
-			 "inner join status_order on status_order.id = ". self::TABLE_NAME .".id_status_order;";
+			 inner join processes on processes.id = ". self::TABLE_NAME ."." . self::ID_PROCESS .
+			 "inner join robots on robots.id = ". self::TABLE_NAME ."." . self::ID_ROBOT .
+			 "inner join status_order on status_order.id = ". self::TABLE_NAME ."." . self::ID_STATUS_ORDER .";";
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 
