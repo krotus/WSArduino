@@ -93,7 +93,8 @@ class Robot  extends AbstractDAO {
 	public static function getAllRobotsAdmin(){
 		try{ 
 			$db = new Database();
-			$sql = "select " . self::TABLE_NAME . ".". self::CODE .",
+			$sql = "select " . self::TABLE_NAME . ".". self::ID .",
+			" . self::TABLE_NAME . ".". self::CODE .",
 			" . self::TABLE_NAME . "." . self::NAME .", 
 			concat(" . self::TABLE_NAME . "." . self::LATITUDE .",'/'," . self::TABLE_NAME . "." . self::LONGITUDE .") as ubication, 
 			status_robot.description as robot_status

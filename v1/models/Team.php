@@ -65,7 +65,8 @@ class Team  extends AbstractDAO {
 	public static function getAllTeamsAdmin(){
 		try{ 
 			$db = new Database();
-			$sql = "select " . self::TABLE_NAME . ".". self::CODE .",
+			$sql = "select " . self::TABLE_NAME . ".". self::ID .",
+			" . self::TABLE_NAME . ".". self::CODE .",
 			" . self::TABLE_NAME . "." . self::NAME .", 
 			concat(workers.name, ' ', workers.surname) as worker
 			from " . self::TABLE_NAME . "
