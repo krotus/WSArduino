@@ -127,6 +127,7 @@ class Order extends AbstractDAO {
 		$code = $order->code;
 		$description = $order->description;
 		$priority = $order->priority;
+		$date = $order->date;
 		$quantity = $order->quantity;
 		$idStatusOrder = $order->statusOrder;
 		$idRobot = $order->robot;
@@ -142,12 +143,13 @@ class Order extends AbstractDAO {
 				self::ID_STATUS_ORDER . "," .
 				self::ID_ROBOT . "," .
 				self::ID_PROCESS . ")" .
-				" VALUES(:code,:description,:priority,NOW(),:quantity,:id_status_order,:id_robot,:id_process)";
+				" VALUES(:code,:description,:priority,:date,:quantity,:id_status_order,:id_robot,:id_process)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":code", $code);
 			$stmt->bindParam(":description", $description);
 			$stmt->bindParam(":priority", $priority);
+			$stmt->bindParam(":date", $date);
 			$stmt->bindParam(":quantity", $quantity);
 			$stmt->bindParam(":id_status_order", $idStatusOrder);
 			$stmt->bindParam(":id_robot", $idRobot);
@@ -174,7 +176,7 @@ class Order extends AbstractDAO {
 			" SET " . self::CODE . " = :code," .
 			self::DESCRIPTION . " = :description," .
 			self::PRIORITY . " = :priority," .
-			self::DATE . " = NOW()," .
+			self::DATE . " = :date," .
 			self::QUANTITY . " = :quantity," .
 			self::ID_STATUS_ORDER . " = :id_status_order," .
 			self::ID_ROBOT . " = :id_robot," .
@@ -186,6 +188,7 @@ class Order extends AbstractDAO {
 			$stmt->bindParam(":code", $order->code);
 			$stmt->bindParam(":description", $order->description);
 			$stmt->bindParam(":priority", $order->priority);
+			$stmt->bindParam(":date", $order->date);
 			$stmt->bindParam(":quantity", $order->quantity);
 			$stmt->bindParam(":id_status_order", $order->statusOrder);
 			$stmt->bindParam(":id_robot", $order->robot);
