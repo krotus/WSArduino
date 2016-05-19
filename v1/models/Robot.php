@@ -19,6 +19,8 @@ class Robot  extends AbstractDAO {
 			return parent::getAll();
 		}else if($request[0] == 'getById'){
 			return parent::getById($request[1]);
+		}else if ($request[0] == 'getAllRobotsAdmin') {
+			return self::getAllRobotsAdmin();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}

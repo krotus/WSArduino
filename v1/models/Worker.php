@@ -89,7 +89,7 @@ class Worker extends AbstractDAO {
 			" . self::TABLE_NAME . "." . self::IS_ADMIN . ", 
 			teams.name as team_name 
 			from " . self::TABLE_NAME . "
-			 inner join teams on teams.id = ". self::TABLE_NAME ."."self::ID_TEAM";";
+			 inner join teams on teams.id = ". self::TABLE_NAME . "." . self::ID_TEAM . ";";
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 
