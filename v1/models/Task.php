@@ -9,8 +9,8 @@ class Task extends AbstractDAO {
 	const ID_TEAM = "id_team";
 	const ID_ORDER = "id_order";
 	const ID_WORKER = "id_worker";
-	const DATA_ASSIGNATION = "data_assignation";
-	const DATA_COMPLETION = "data_completion";
+	const DATE_ASSIGNATION = "date_assignation";
+	const DATE_COMPLETION = "date_completion";
 	const JUSTIFICATION = "justification";
 
 	//HTTP REQUEST GET
@@ -80,40 +80,11 @@ class Task extends AbstractDAO {
 		}
 	}
 
-
-
-
-	//METHOD CREATE CALLS INSERT FUNCTION
-	public static function create(){
-		$body = file_get_contents('php://input');
-		$task = json_decode($body);
-		//validar camps
-		//crear usuari
-		$response = self::insert($task);
-		switch($response){
-			case parent::STATE_CREATE_SUCCESS:
-				http_response_code(200);
-				return
-					[
-						"state" => 200,
-						"message" => utf8_encode("Register success.")
-					];
-				break;
-			case 400:
-				throw new ExceptionApi(parent::STATE_CREATE_FAIL, "Ha sorgit un error");
-				break;
-			default:
-				throw new ExceptionApi(parent::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
-
-		}
-	}
-
 	//TODO
 	public static function insert($task){
 		$team = $task->team;
 		$order = $task->order;
 		$worker = $task->worker;
-		$dateAssignation = $task->dateAssignation;
 		$dateCompletion = $task->dateCompletion;
 		$justification = $task->justification;
 		try{
@@ -122,16 +93,15 @@ class Task extends AbstractDAO {
 				self::ID_TEAM . "," .
 				self::ID_ORDER . "," .
 				self::ID_WORKER . "," .
-				self::DATA_ASSIGNATION . "," .
-				self::DATA_COMPLETION . "," .
+				self::DATE_ASSIGNATION . "," .
+				self::DATE_COMPLETION . "," .
 				self::JUSTIFICATION . ")" .
-				" VALUES(:id_team,:id_order,:id_worker,:date_assignation,:date_completion,:justification)";
+				" VALUES(:id_team,:id_order,:id_worker,NOW(),:date_completion,:justification)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":id_team", $team);
 			$stmt->bindParam(":id_order", $order);
 			$stmt->bindParam(":id_worker", $worker);
-			$stmt->bindParam(":date_assignation", $dateAssignation);
 			$stmt->bindParam(":date_completion", $dateCompletion);
 			$stmt->bindParam(":justification", $justification);
 
@@ -155,8 +125,8 @@ class Task extends AbstractDAO {
 			" SET " . self::ID_TEAM . " = :id_team," .
 			self::ID_ORDER . " = :id_order," .
 			self::ID_WORKER . " = :id_worker," .
-			self::DATA_ASSIGNATION . " = :data_assignation," .
-			self::DATA_COMPLETION . " = :data_completion, " .
+			self::DATE_ASSIGNATION . " = NOW()," .
+			self::DATE_COMPLETION . " = :date_completion, " .
 			self::JUSTIFICATION . " = :justification" .
 			"WHERE " . self::ID . " = :id";
 
@@ -165,8 +135,7 @@ class Task extends AbstractDAO {
 			$stmt->bindParam(":id_team", $task->team);
 			$stmt->bindParam(":id_order", $task->order);
 			$stmt->bindParam(":id_worker", $task->worker);
-			$stmt->bindParam(":data_assignation", $task->dateAssignation);
-			$stmt->bindParam(":data_completion", $task->dateCompletion);
+			$stmt->bindParam(":date_completion", $task->dateCompletion);
 			$stmt->bindParam(":justification", $task->justification);
 			$stmt->bindParam(":id", $id);
 
@@ -198,6 +167,50 @@ class Task extends AbstractDAO {
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
+
+	public static function updateTaskCompleted($idOrder,$date){
+		try{
+
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::DATE_COMPLETION . " = :date_completion " .
+			"WHERE " . self::ID_ORDER . " = :id_order";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":date_completion", $date);
+			$stmt->bindParam(":id_order", $idOrder);
+			
+			$stmt->execute();
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+	public static function updateTaskCancelled($idOrder,$justification){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::JUSTIFICATION . " = :justification " .
+			"WHERE " . self::ID_ORDER . " = :id_order";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":justification", $justification);
+			$stmt->bindParam(":id_order", $idOrder);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+
 
 	public static function getById($id){
 		try{

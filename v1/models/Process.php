@@ -52,16 +52,16 @@ class Process  extends AbstractDAO {
 					http_response_code(200);
 					return [
 						"state" => parent::STATE_SUCCESS,
-						"message" => "Actualització treballador existosa"
+						"message" => "Actualització Process existosa"
 					];
 				}else{
-					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El treballador que intentes accedir no existeix",404);
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El Process que intentes accedir no existeix",404);
 				}
 			}else{
 				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}
 		}else{
-			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del treballador", 422);
+			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del Process", 422);
 		}
 	}
 
@@ -101,7 +101,7 @@ class Process  extends AbstractDAO {
 				$sql = "UPDATE " . self::TABLE_NAME . 
 				" SET " . self::CODE . " = :code," . 
 				self::DESCRIPTION . " = :description" .
-				"WHERE " . self::ID . " = :id";
+				" WHERE " . self::ID . " = :id";
 
 				//prerarem la sentencia
 				$stmt = $db->prepare($sql);

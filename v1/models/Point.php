@@ -9,7 +9,7 @@ class Point extends AbstractDAO {
 	const ID = "id";
 	const POS_X = "pos_x";
 	const POS_Y = "pos_y";
-	const POS_Z = "pox_z";
+	const POS_Z = "pos_z";
 	const TWEEZER = "tweezer";
 	const ID_PROCESS = "id_process";
 
@@ -55,16 +55,16 @@ class Point extends AbstractDAO {
 					http_response_code(200);
 					return [
 						"state" => parent::STATE_SUCCESS,
-						"message" => "Actualització treballador existosa"
+						"message" => "Actualització del punt existosa"
 					];
 				}else{
-					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El treballador que intentes accedir no existeix",404);
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El punt al que intentes accedir no existeix",404);
 				}
 			}else{
 				throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "La ruta especificada no existeix",422);
 			}
 		}else{
-			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del treballador", 422);
+			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del punt", 422);
 		}
 	}
 
@@ -113,16 +113,16 @@ class Point extends AbstractDAO {
 			$sql = "UPDATE " . self::TABLE_NAME . 
 			" SET " . self::POS_X . " = :pos_x," .
 			self::POS_Y . " = :pos_y," .
-			self::POS_Z . " = :pox_z," .
+			self::POS_Z . " = :pos_z," .
 			self::TWEEZER . " = :tweezer," .
 			self::ID_PROCESS . " = :id_process " .
-			"WHERE " . self::ID . " = :id";
+			" WHERE " . self::ID . " = :id";
 
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":pos_x", $point->posX);
 			$stmt->bindParam(":pos_y", $point->posY);
-			$stmt->bindParam(":id_worker", $point->posZ);
+			$stmt->bindParam(":pos_z", $point->posZ);
 			$stmt->bindParam(":tweezer", $point->tweezer);
 			$stmt->bindParam(":id_process", $point->process);
 			$stmt->bindParam(":id", $id);
