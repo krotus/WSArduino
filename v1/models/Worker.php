@@ -24,6 +24,8 @@ class Worker extends AbstractDAO {
 			return parent::getAll();
 		}else if($request[0] == 'getById'){
 			return parent::getById($request[1]);
+		} else if ($request[0] == 'getAllWorkersAdmin') {
+			return self::getAllWorkersAdmin();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -70,6 +72,37 @@ class Worker extends AbstractDAO {
 			}
 		}else{
 			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del treballador", 422);
+		}
+	}
+
+	public static function getAllWorkersAdmin(){
+		try{ 
+			$db = new Database();
+			$sql = "select " . self::TABLE_NAME . ".". self::USERNAME .",
+			" . self::TABLE_NAME . "." . self::NIF .", 
+			" . self::TABLE_NAME . "." . self::NAME .", 
+			" . self::TABLE_NAME . "." . self::SURNAME .", 
+			" . self::TABLE_NAME . "." . self::MOBILE .", 
+			" . self::TABLE_NAME . "." . self::TELEPHONE .", 
+			" . self::TABLE_NAME . "." . self::CATEGORY . ", 
+			" . self::TABLE_NAME . "." . self::IS_ADMIN . ", 
+			teams.name as team_name 
+			from " . self::TABLE_NAME . "
+			 inner join teams on teams.id = ". self::TABLE_NAME .".id_team;";
+			$stmt = $db->prepare($sql);
+			$result = $stmt->execute();
+
+			if($result){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
