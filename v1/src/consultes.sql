@@ -39,18 +39,27 @@ update tasks set date_completion = now() where tasks.id in (select * from a00);
 
 #1
 
-#select nif, name, surname, telephone, category 
+select workers.code,
+workers.username, 
+workers.nif, 
+workers.name, 
+workers.surname, 
+workers.mobile, 
+workers.telephone, 
+workers.category, 
+teams.name
 
-#from workers;
+from workers
+join teams on teams.id = workers.id_team;
 
 
 
 #2
 
-#select teams.code, teams.name,  concat(workers.name, ' ', workers.surname) as worker
+select teams.code, teams.name,  concat(workers.name, ' ', workers.surname) as worker
 
-#from teams
-#join workers on workers.id_team = teams.id
+from teams
+join workers on workers.id_team = teams.id
 
 
 
