@@ -17,6 +17,8 @@ class Process  extends AbstractDAO {
 			return parent::getAll();
 		}else if($request[0] == 'getById'){
 			return self::getById($request[1]);
+		}else if ($request[0] == 'getAllProcessesAdmin') {
+			return self::getAllProcessesAdmin();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -65,6 +67,37 @@ class Process  extends AbstractDAO {
 		}
 	}
 
+	public static function getAllProcessesAdmin(){
+		try{ 
+			$db = new Database();
+			$sql = "select " . self::TABLE_NAME . ".". self::ID .",
+			" . self::TABLE_NAME . ".". self::CODE .",
+			" . self::TABLE_NAME . "." . self::DESCRIPTION .", 
+			points.pos_x, 
+			points.pos_y, 
+			points.pos_z, 
+			case 
+				when points.tweezer = 0 then 'tancada' 
+    			when points.tweezer = 1 then 'oberta' 
+    		end as pinca 
+			from " . self::TABLE_NAME . "
+			 inner join points on points.id_process = ". self::TABLE_NAME . "." . self::ID . ";";
+			$stmt = $db->prepare($sql);
+			$result = $stmt->execute();
+
+			if($result){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function insert($process){
 		$code = $process->code;

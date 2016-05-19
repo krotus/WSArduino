@@ -19,6 +19,8 @@ class Robot  extends AbstractDAO {
 			return parent::getAll();
 		}else if($request[0] == 'getById'){
 			return parent::getById($request[1]);
+		}else if ($request[0] == 'getAllRobotsAdmin') {
+			return self::getAllRobotsAdmin();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -44,8 +46,8 @@ class Robot  extends AbstractDAO {
 			if(self::updateIP($idRobot, $robot) > 0){
 				http_response_code(200);
 				return [
-					"state" => parent::STATE_SUCCESS,
-					"message" => "Actualització IP del robot existosa"
+				"state" => parent::STATE_SUCCESS,
+				"message" => "Actualització IP del robot existosa"
 				];
 			} else {
 				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
@@ -66,8 +68,8 @@ class Robot  extends AbstractDAO {
 				if(self::update($idRobot, $robot) > 0){
 					http_response_code(200);
 					return [
-						"state" => parent::STATE_SUCCESS,
-						"message" => "Actualització robot existosa"
+					"state" => parent::STATE_SUCCESS,
+					"message" => "Actualització robot existosa"
 					];
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
@@ -76,8 +78,8 @@ class Robot  extends AbstractDAO {
 				if(parent::updateIP($idRobot, $robot) > 0){
 					http_response_code(200);
 					return [
-						"state" => parent::STATE_SUCCESS,
-						"message" => "Actualització IP del robot existosa"
+					"state" => parent::STATE_SUCCESS,
+					"message" => "Actualització IP del robot existosa"
 					];
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
@@ -87,6 +89,33 @@ class Robot  extends AbstractDAO {
 			}
 		}else{
 			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del robot", 422);
+		}
+	}
+
+	public static function getAllRobotsAdmin(){
+		try{ 
+			$db = new Database();
+			$sql = "select " . self::TABLE_NAME . ".". self::ID .",
+			" . self::TABLE_NAME . ".". self::CODE .",
+			" . self::TABLE_NAME . "." . self::NAME .", 
+			concat(" . self::TABLE_NAME . "." . self::LATITUDE .",'/'," . self::TABLE_NAME . "." . self::LONGITUDE .") as ubication, 
+			status_robot.description as robot_status
+			from " . self::TABLE_NAME . "
+			inner join status_robot on status_robot.id = ". self::TABLE_NAME ."." . self::ID_CURRENT_STATUS. ";";
+			$stmt = $db->prepare($sql);
+			$result = $stmt->execute();
+
+			if($result){
+				http_response_code(200);
+				return [
+				"state" => self::STATE_SUCCESS,
+				"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
@@ -100,13 +129,13 @@ class Robot  extends AbstractDAO {
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
-				self::CODE . "," .
-				self::NAME . "," .
-				self::IP_ADDRESS . "," .
-				self::LATITUDE . "," .
-				self::LONGITUDE . "," .
-				self::ID_CURRENT_STATUS . ")" .
-				" VALUES(:code,:name,:ip_address,:latitude,:longitude,:id_current_status)";
+			self::CODE . "," .
+			self::NAME . "," .
+			self::IP_ADDRESS . "," .
+			self::LATITUDE . "," .
+			self::LONGITUDE . "," .
+			self::ID_CURRENT_STATUS . ")" .
+			" VALUES(:code,:name,:ip_address,:latitude,:longitude,:id_current_status)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":code", $code);
@@ -182,4 +211,4 @@ class Robot  extends AbstractDAO {
 
 }
 
- ?>
+?>

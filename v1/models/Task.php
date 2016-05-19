@@ -19,6 +19,8 @@ class Task extends AbstractDAO {
 			return parent::getAll();
 		}else if($request[0] == 'getById'){
 			return parent::getById($request[1]);
+		}else if ($request[0] == 'getAllTasksAdmin') {
+			return self::getAllTasksAdmin();
 		}else if($request[0] == "updateOrderTaskExecute"){
 			$idWorker = $request[1];
 			$idOrder = $request[2];
@@ -80,31 +82,34 @@ class Task extends AbstractDAO {
 		}
 	}
 
+	public static function getAllTasksAdmin(){
+		try{ 
+			$db = new Database();
+			$sql = "select " . self::TABLE_NAME . ".". self::ID .",
+			teams.name as team_name,
+			orders.description as description_order,
+			concat(workers.name, ' ', workers.surname) as worker,
+			" . self::TABLE_NAME . "." . self::DATE_ASSIGNATION .", 
+			" . self::TABLE_NAME . "." . self::DATE_COMPLETION .", 
+			" . self::TABLE_NAME . "." . self::JUSTIFICATION ."
+			from " . self::TABLE_NAME . "
+			 inner join teams on teams.id = ". self::TABLE_NAME ."." . self::ID_TEAM .
+			 " inner join orders on orders.id = ". self::TABLE_NAME ."." . self::ID_ORDER .
+			 " inner join workers on workers.id = ". self::TABLE_NAME ."." . self::ID_WORKER .";";
+			$stmt = $db->prepare($sql);
+		    $result = $stmt->execute();
 
-
-
-	//METHOD CREATE CALLS INSERT FUNCTION
-	public static function create(){
-		$body = file_get_contents('php://input');
-		$task = json_decode($body);
-		//validar camps
-		//crear usuari
-		$response = self::insert($task);
-		switch($response){
-			case parent::STATE_CREATE_SUCCESS:
+			if($result){
 				http_response_code(200);
-				return
-					[
-						"state" => 200,
-						"message" => utf8_encode("Register success.")
-					];
-				break;
-			case 400:
-				throw new ExceptionApi(parent::STATE_CREATE_FAIL, "Ha sorgit un error");
-				break;
-			default:
-				throw new ExceptionApi(parent::STATE_FAIL_UNKNOWN, "Ha sorgit un algo malament", 400);
-
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 

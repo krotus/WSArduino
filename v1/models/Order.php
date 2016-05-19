@@ -123,6 +123,40 @@ class Order extends AbstractDAO {
 		}
 	}
 
+public static function getAllOrdersAdmin(){
+		try{ 
+			$db = new Database();
+			$sql = "select " . self::TABLE_NAME . ".". self::ID ." as order_id,
+			" . self::TABLE_NAME . "." . self::CODE ." as order_code, 
+			" . self::TABLE_NAME . "." . self::DESCRIPTION ." as order_description, 
+			" . self::TABLE_NAME . "." . self::PRIORITY ." as order_priority, 
+			" . self::TABLE_NAME . "." . self::DATE ."  as order_date, 
+			processes.description as process_description, 
+			" . self::TABLE_NAME . "." . self::QUANTITY . " as order_quantity, 
+			robots.name as robot_name, 
+			robots.code as robot_code,
+			status_order.description as status_order_description
+			from " . self::TABLE_NAME . "
+			 inner join processes on processes.id = ". self::TABLE_NAME ."." . self::ID_PROCESS .
+			 "inner join robots on robots.id = ". self::TABLE_NAME ."." . self::ID_ROBOT .
+			 "inner join status_order on status_order.id = ". self::TABLE_NAME ."." . self::ID_STATUS_ORDER .";";
+			$stmt = $db->prepare($sql);
+			$result = $stmt->execute();
+
+			if($result){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
 	public static function insert($order){
 		$code = $order->code;
 		$description = $order->description;
