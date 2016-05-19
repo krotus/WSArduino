@@ -99,7 +99,7 @@ class Robot  extends AbstractDAO {
 			concat(" . self::TABLE_NAME . "." . self::LATITUDE .",'/'," . self::TABLE_NAME . "." . self::LONGITUDE .") as ubication, 
 			status_robot.description as robot_status
 			from " . self::TABLE_NAME . "
-			inner join status_robot on status_robot.id = ". self::TABLE_NAME ."."self::ID_CURRENT_STATUS";";
+			inner join status_robot on status_robot.id = ". self::TABLE_NAME ."." . self::ID_CURRENT_STATUS. ";";
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 

@@ -123,7 +123,7 @@ class Order extends AbstractDAO {
 		}
 	}
 
-public static function getAllWorkersAdmin(){
+public static function getAllOrdersAdmin(){
 		try{ 
 			$db = new Database();
 			$sql = "select " . self::TABLE_NAME . ".". self::ID ." as order_id,
@@ -137,8 +137,8 @@ public static function getAllWorkersAdmin(){
 			robots.code as robot_code,
 			status_order.description as status_order_description
 			from " . self::TABLE_NAME . "
-			 inner join processes on processes.id = ". self::TABLE_NAME .".id_process"
-			 "inner join robots on robots.id = ". self::TABLE_NAME .".id_robot"
+			 inner join processes on processes.id = ". self::TABLE_NAME .".id_process".
+			 "inner join robots on robots.id = ". self::TABLE_NAME .".id_robot".
 			 "inner join status_order on status_order.id = ". self::TABLE_NAME .".id_status_order;";
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
