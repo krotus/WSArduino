@@ -156,7 +156,7 @@ class Task extends AbstractDAO {
 			self::DATE_ASSIGNATION . " = NOW()," .
 			self::DATE_COMPLETION . " = :date_completion, " .
 			self::JUSTIFICATION . " = :justification" .
-			"WHERE " . self::ID . " = :id";
+			" WHERE " . self::ID . " = :id";
 
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
