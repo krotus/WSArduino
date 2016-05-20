@@ -70,16 +70,15 @@ class Process  extends AbstractDAO {
 	public static function getAllProcessesAdmin(){
 		try{ 
 			$db = new Database();
-			$sql = "select " . self::TABLE_NAME . ".". self::ID .",
+			$sql = "select distinct " . self::TABLE_NAME . ".". self::ID .",
 			" . self::TABLE_NAME . ".". self::CODE .",
 			" . self::TABLE_NAME . "." . self::DESCRIPTION .", 
-			points.pos_x, 
-			points.pos_y, 
-			points.pos_z, 
-			case 
-				when points.tweezer = 0 then 'tancada' 
-    			when points.tweezer = 1 then 'oberta' 
-    		end as pinca 
+			(select group_concat('X:',points.pos_x, 
+			' Y:',points.pos_y, 
+			' Z:',points.pos_z, 
+			' Pinza:',if(points.tweezer=0, 'cerrada', 'abierta')) as move
+			from points 
+			where points.id_process = ". self::TABLE_NAME . ".id) as move
 			from " . self::TABLE_NAME . "
 			 inner join points on points.id_process = ". self::TABLE_NAME . "." . self::ID . ";";
 			$stmt = $db->prepare($sql);
