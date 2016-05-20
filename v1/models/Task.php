@@ -200,7 +200,7 @@ class Task extends AbstractDAO {
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
-	public function updateTaskTeam($idTeam,$idWorker) {
+	public static function updateTaskTeam($idTeam,$idWorker) {
 		try {
 			$db = new Database();
 			$sql = "UPDATE ". self::TABLE_NAME ." SET ". self::ID_TEAM ." = :id_team WHERE ". self::ID_WORKER ." = :id_worker";
