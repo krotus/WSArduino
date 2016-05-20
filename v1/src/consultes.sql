@@ -63,8 +63,6 @@ teams.name,
 from teams
 inner join workers on workers.id_team = teams.id
 
-
-
 #3
 select robots.code, 
 robots.name, 
@@ -76,14 +74,14 @@ inner join status_robot on status_robot.id = robots.id_current_status
 
 #4
 
-select processes.code, 
+select distinct processes.code, 
 processes.description, 
-points.pos_x, 
-points.pos_y, 
-points.pos_z, 
-case 
-	when points.tweezer = 0 then 'tancada' 
-    when points.tweezer = 1 then 'oberta' end as pinca 
+
+(select group_concat("X:",points.pos_x, 
+" Y:",points.pos_y, 
+" Z:",points.pos_z, 
+" Pinza:",if(points.tweezer=0, 'cerrada', 'abierta')) as move from points where points.id_process = processes.id) as move
+
 from processes
 inner join points on points.id_process = processes.id
 
