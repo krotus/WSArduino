@@ -200,6 +200,20 @@ class Task extends AbstractDAO {
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
+	public function updateTaskTeam($idTeam,$idWorker) {
+		try {
+			$db = new Database();
+			$sql = "UPDATE ". self::TABLE_NAME ." SET ". self::ID_TEAM ." = :id_team WHERE ". self::ID_WORKER ." = :id_worker";
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":id_team", $idTeam);
+			$stmt->bindParam(":id_worker", $idWorker);
+
+			$stmt->execute();
+			return $stmt->rowCount();
+		} catch (PDOException $e) {
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	public static function updateTaskCompleted($idOrder,$date){
 		try{
@@ -245,37 +259,15 @@ class Task extends AbstractDAO {
 
 
 
-	public static function getById($id){
+	public static function getTaskIdByIdOrder($id){
 		try{
 			$db = new Database();
-			$sql = "SELECT * FROM " . self::TABLE_NAME . " WHERE ". self::ID ." = :id";
+			$sql = "SELECT " . self::ID . " FROM " . self::TABLE_NAME . " WHERE ". self::ID_ORDER ." = :id";
 			$stmt = $db->prepare($sql);
 			$stmt->execute(array(':id' => $id));
-			$task = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			if($task){
-				http_response_code(200);
-				return $task;
-			}
-		}catch(PDOException $e){
-			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
-		}
-	}
-
-	public static function getAll(){
-		try{
-			$db = new Database();
-			$sql = "SELECT * FROM ".self::TABLE_NAME;
-			$stmt = $db->prepare($sql);
-			$result = $stmt->execute();
-
-			if($result){
-				http_response_code(200);
-				return [
-					"state" => parent::STATE_SUCCESS,
-					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
-				];
-			}else{
-				throw new ExceptionApi(parent::STATE_ERROR, "S'ha produït un error");
+			$taskid = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			if($taskid){
+				return $taskid;
 			}
 		}catch(PDOException $e){
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
