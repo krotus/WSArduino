@@ -134,15 +134,21 @@ where teams.name = 'EquipA'
 
 #tasks consult
 
-select tasks.id,
-teams.name as team_name,
-orders.description as description_order,
-concat(workers.name, ' ', workers.surname) as worker,
-tasks.date_assignation,
-tasks.date_completion,
-tasks.justification
-
+select concat(workers.name,' ',workers.surname) as worker,
+count(tasks.id_worker) as tasks_done
 from tasks
-join teams on teams.id = tasks.id_team
 join orders on orders.id = tasks.id_order
-join workers on workers.id = tasks.id_worker;
+left join workers on workers.id = tasks.id_worker
+where tasks.id_worker is not null and orders.id_status_order = 3
+and (tasks.date_completion between '01/01/2016' and '31/12/2016' or tasks.date_completion is not null)
+group by tasks.id_worker
+
+select teams.name as team,
+count(tasks.id_team) as tasks_done
+from tasks
+join orders on orders.id = tasks.id_order
+left join teams on teams.id = tasks.id_team
+where tasks.id_team is not null and orders.id_status_order = 3
+and (tasks.date_completion between '01/01/2016' and '31/12/2016' or tasks.date_completion is not null)
+group by tasks.id_team
+
