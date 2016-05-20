@@ -63,11 +63,7 @@ class Order extends AbstractDAO {
 			}
 		}else if($request[0] == "getAllOrdersAdmin"){
 			if(self::getAllOrdersAdmin()){
-				http_response_code(200);
-				return [
-					"state" => parent::STATE_SUCCESS,
-					"message" => "Obtenim totes les ordres de admin"
-				];
+				return self::getAllOrdersAdmin();
 			}else{
 				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
 			}
@@ -171,8 +167,8 @@ public static function getAllOrdersAdmin(){
 			status_order.description as status_order_description
 			from " . self::TABLE_NAME . "
 			 inner join processes on processes.id = ". self::TABLE_NAME ."." . self::ID_PROCESS .
-			 "inner join robots on robots.id = ". self::TABLE_NAME ."." . self::ID_ROBOT .
-			 "inner join status_order on status_order.id = ". self::TABLE_NAME ."." . self::ID_STATUS_ORDER .";";
+			 " inner join robots on robots.id = ". self::TABLE_NAME ."." . self::ID_ROBOT .
+			 " inner join status_order on status_order.id = ". self::TABLE_NAME ."." . self::ID_STATUS_ORDER .";";
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 
