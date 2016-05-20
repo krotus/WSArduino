@@ -73,7 +73,7 @@ class Team  extends AbstractDAO {
 			(select group_concat(workers.name, ' ', workers.surname) as worker 
 			from workers where workers.id_team = " . self::TABLE_NAME . ".id) as workers 
 			from " . self::TABLE_NAME . "
-			inner join workers on workers.id_team = ". self::TABLE_NAME ."." . self::ID . ";";
+			left join workers on workers.id_team = ". self::TABLE_NAME ."." . self::ID . ";";
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 
