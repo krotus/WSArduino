@@ -80,7 +80,7 @@ class Process  extends AbstractDAO {
 			from points 
 			where points.id_process = ". self::TABLE_NAME . ".id) as move
 			from " . self::TABLE_NAME . "
-			 inner join points on points.id_process = ". self::TABLE_NAME . "." . self::ID . ";";
+			 left join points on points.id_process = ". self::TABLE_NAME . "." . self::ID . ";";
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 
