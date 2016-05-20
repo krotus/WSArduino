@@ -183,10 +183,10 @@ public static function getAllOrdersAdmin(){
 					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
 				];
 			}else{
-				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+				throw new ExceptionApi(parent::STATE_ERROR, "S'ha produït un error");
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 
