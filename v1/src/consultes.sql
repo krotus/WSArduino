@@ -106,7 +106,7 @@ inner join status_order on status_order.id = orders.id_status_order
 #8.1
 select concat(workers.name, workers.surname) as workers_user,
 teams.name as team_name,
-orders.code as order_code,  
+orders.code as order_code,
 orders.description as order_description,
 orders.priority as order_priority,
 orders.date as order_date,

@@ -76,6 +76,8 @@ class Order extends AbstractDAO {
 	public static function post($request){
 		if($request[0] == 'create'){
 			return parent::create();
+		} else if ($request[0] == 'stadistic') {
+			return self::stadistic();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -333,7 +335,77 @@ public static function getAllOrdersAdmin(){
 		}
 	}
 
+	public static function stadistic() {
+		$body = file_get_contents('php://input');
+		$stadistic = json_decode($body);
+		$startDate = $stadistic->startDate;
+		$endDate = $stadistic->endDate;
+		$teamWorker = $stadistic->teamWorker;
+		if ($teamWorker == "worker") {
+			return self::stadisticWorker($startDate,$endDate);
+		} else if ($teamWorker == "team") {
+			return self::stadisticTeam($startDate,$endDate);
+		} 
+	}
 
+	public function stadisticTeam($startDate,$endDate) {
+		try {
+			$db = new Database();
+			$sql = "select teams.name as team,
+					count(tasks.id_team) as tasks_done
+					from tasks
+					join " . self::TABLE_NAME ." on " . self::TABLE_NAME ."." . self::ID . " = tasks.id_order
+					left join teams on teams.id = tasks.id_team
+					where tasks.id_team is not null and " . self::TABLE_NAME .".id_status_order = 3
+					and (tasks.date_completion between ". $startDate ." and " . $endDate . " or tasks.date_completion is not null)
+					group by tasks.id_team";
+					$stmt = $db->prepare($sql);
+					$stmt->bindParam(":startDate", $startDate);
+					$stmt->bindParam(":endDate", $endDate);
+					$stmt->execute();
+					if($result){
+						http_response_code(200);
+						return [
+							"state" => self::STATE_SUCCESS,
+							"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+						];
+					}else{
+						throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+					}
+		} catch (PDOException $e) {
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+
+	public function stadisticWorker($startDate,$endDate) {
+		try {
+			$db = new Database();
+			$sql = "select concat(workers.name,' ',workers.surname) as worker,
+					count(tasks.id_worker) as tasks_done
+					from tasks
+					join ". self::TABLE_NAME ." on ". self::TABLE_NAME .".". self::ID ." = tasks.id_order
+					left join workers on workers.id = tasks.id_worker
+					where tasks.id_worker is not null and ". self::TABLE_NAME ."." . self::ID_STATUS_ORDER . " = 3
+					and (tasks.date_completion between " . $startDate . " and " . $endDate . " or tasks.date_completion is not null)
+					group by tasks.id_worker";
+					$stmt = $db->prepare($sql);
+					$stmt->bindParam(":startDate", $startDate);
+					$stmt->bindParam(":endDate", $endDate);
+					$stmt->execute();
+					if($result){
+						http_response_code(200);
+						return [
+							"state" => self::STATE_SUCCESS,
+							"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+						];
+					}else{
+						throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+					}
+		} catch (PDOException $e) {
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 
 	
