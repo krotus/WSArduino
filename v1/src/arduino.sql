@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 4.5.2
 -- http://www.phpmyadmin.net
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 13-05-2016 a las 16:11:07
--- Versión del servidor: 5.6.17
--- Versión de PHP: 5.5.12
+-- Servidor: localhost
+-- Tiempo de generación: 20-05-2016 a las 20:11:39
+-- Versión del servidor: 10.1.9-MariaDB
+-- Versión de PHP: 5.6.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Base de datos: `arduino`
@@ -26,22 +26,17 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `orders`
 --
 
-CREATE TABLE IF NOT EXISTS `orders` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
   `description` char(50) NOT NULL,
   `priority` int(11) NOT NULL,
   `date` datetime NOT NULL,
   `quantity` int(11) NOT NULL,
   `id_status_order` int(11) NOT NULL,
-  `id_robot` int(11) NOT NULL,
-  `id_process` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`),
-  KEY `id_robot` (`id_robot`),
-  KEY `id_status_order` (`id_status_order`),
-  KEY `id_process` (`id_process`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+  `id_robot` int(11) DEFAULT NULL,
+  `id_process` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `orders`
@@ -49,21 +44,21 @@ CREATE TABLE IF NOT EXISTS `orders` (
 
 INSERT INTO `orders` (`id`, `code`, `description`, `priority`, `date`, `quantity`, `id_status_order`, `id_robot`, `id_process`) VALUES
 (1, 99, 'Orde de fabricació prova', 5, '2016-05-13 16:02:10', 4, 1, 1, 1),
-(2, 100, 'Ordre de fabricacio prova 1', 6, '2016-05-13 16:02:10', 2, 1, 1, 1),
-(3, 101, 'Ordre de fabricació prova 2', 1, '2016-05-13 16:02:10', 5, 1, 5, 3),
+(2, 100, 'Ordre de fabricacio prova 1', 6, '2016-05-13 16:02:10', 2, 4, 1, 1),
+(3, 101, 'Ordre de fabricació prova 2', 1, '2016-05-13 16:02:10', 5, 2, 5, 3),
 (4, 102, 'Ordre de fabricació prova 3', 9, '2016-05-13 16:02:10', 1, 2, 1, 6),
 (5, 103, 'Ordre de fabricació prova 4', 7, '2016-05-13 16:02:10', 6, 3, 1, 2),
-(6, 104, 'Ordre de fabricació prova 5', 2, '2016-05-13 16:02:10', 10, 3, 1, 1),
-(7, 105, 'Ordre de fabricació prova 6', 5, '2016-05-13 16:02:10', 50, 4, 2, 1),
-(8, 106, 'Ordre de fabricació prova 7', 8, '2016-05-13 16:02:10', 4, 5, 5, 5),
-(9, 107, 'Ordre de fabricació prova 8', 10, '2016-05-13 16:02:10', 25, 1, 4, 4),
-(10, 108, 'Ordre de fabricació prova 9', 1, '2016-05-13 16:02:10', 15, 1, 1, 6),
+(6, 104, 'Ordre de fabricació prova 5', 2, '2016-05-13 16:02:10', 10, 1, 1, 1),
+(7, 105, 'Ordre de fabricació prova 6', 5, '2016-05-13 16:02:10', 50, 4, NULL, 1),
+(8, 106, 'Ordre de fabricació prova 7', 8, '2016-05-13 16:02:10', 4, 3, 5, 5),
+(9, 107, 'Ordre de fabricació prova 8', 10, '2016-05-13 16:02:10', 25, 5, 4, 4),
+(10, 108, 'Ordre de fabricació prova 9', 1, '2016-05-13 16:02:10', 15, 3, 1, 6),
 (11, 109, 'Ordre de fabricació prova 10', 3, '2016-05-13 16:02:10', 6, 2, 1, 4),
-(12, 110, 'Ordre de fabricació prova 11', 8, '2016-05-13 16:02:10', 9, 1, 1, 1),
+(12, 110, 'Ordre de fabricació prova 11', 8, '2016-05-13 16:02:10', 9, 1, NULL, NULL),
 (13, 111, 'Ordre de fabricació prova 12', 4, '2016-05-13 16:02:10', 90, 4, 1, 1),
-(14, 112, 'Ordre de fabricació prova 13', 2, '2016-05-13 16:02:10', 53, 1, 1, 1),
+(14, 112, 'Ordre de fabricació prova 13', 2, '2016-05-13 16:02:10', 53, 1, 4, 3),
 (15, 113, 'Ordre de fabricació prova 14', 5, '2016-05-13 16:02:10', 50, 2, 1, 1),
-(16, 114, 'Ordre de fabricació prova 15', 7, '2016-05-13 16:02:10', 20, 1, 1, 1);
+(16, 114, 'Ordre de fabricació prova 15', 7, '2016-05-13 16:02:10', 20, 4, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -71,16 +66,14 @@ INSERT INTO `orders` (`id`, `code`, `description`, `priority`, `date`, `quantity
 -- Estructura de tabla para la tabla `points`
 --
 
-CREATE TABLE IF NOT EXISTS `points` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `points` (
+  `id` int(11) NOT NULL,
   `pos_x` int(11) NOT NULL,
   `pos_y` int(11) NOT NULL,
   `pos_z` int(11) NOT NULL,
   `tweezer` tinyint(1) NOT NULL,
-  `id_process` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_process` (`id_process`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+  `id_process` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `points`
@@ -106,13 +99,11 @@ INSERT INTO `points` (`id`, `pos_x`, `pos_y`, `pos_z`, `tweezer`, `id_process`) 
 -- Estructura de tabla para la tabla `processes`
 --
 
-CREATE TABLE IF NOT EXISTS `processes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `processes` (
+  `id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
-  `description` char(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+  `description` char(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `processes`
@@ -132,17 +123,15 @@ INSERT INTO `processes` (`id`, `code`, `description`) VALUES
 -- Estructura de tabla para la tabla `robots`
 --
 
-CREATE TABLE IF NOT EXISTS `robots` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `robots` (
+  `id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
   `name` char(50) NOT NULL,
-  `ip_address` char(20) NOT NULL,
+  `ip_address` char(20) DEFAULT NULL,
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
-  `id_current_status` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_current_status` (`id_current_status`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+  `id_current_status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `robots`
@@ -162,11 +151,10 @@ INSERT INTO `robots` (`id`, `code`, `name`, `ip_address`, `latitude`, `longitude
 -- Estructura de tabla para la tabla `status_order`
 --
 
-CREATE TABLE IF NOT EXISTS `status_order` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` char(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+CREATE TABLE `status_order` (
+  `id` int(11) NOT NULL,
+  `description` char(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `status_order`
@@ -185,11 +173,10 @@ INSERT INTO `status_order` (`id`, `description`) VALUES
 -- Estructura de tabla para la tabla `status_robot`
 --
 
-CREATE TABLE IF NOT EXISTS `status_robot` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `description` char(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+CREATE TABLE `status_robot` (
+  `id` int(11) NOT NULL,
+  `description` char(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `status_robot`
@@ -207,38 +194,32 @@ INSERT INTO `status_robot` (`id`, `description`) VALUES
 -- Estructura de tabla para la tabla `tasks`
 --
 
-CREATE TABLE IF NOT EXISTS `tasks` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_team` int(11) NOT NULL,
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL,
+  `id_team` int(11) DEFAULT NULL,
   `id_order` int(11) NOT NULL,
-  `id_worker` int(11) NOT NULL,
-  `date_assignation` datetime NOT NULL,
+  `id_worker` int(11) DEFAULT NULL,
+  `date_assignation` datetime DEFAULT NULL,
   `date_completion` datetime DEFAULT NULL,
-  `justification` char(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `id_team` (`id_team`),
-  KEY `id_order` (`id_order`),
-  KEY `id_worker` (`id_worker`),
-  KEY `id_team_2` (`id_team`),
-  KEY `id_order_2` (`id_order`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+  `justification` char(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tasks`
 --
 
 INSERT INTO `tasks` (`id`, `id_team`, `id_order`, `id_worker`, `date_assignation`, `date_completion`, `justification`) VALUES
-(1, 2, 1, 4, '2016-05-13 15:57:37', NULL, 'Es de prova Es de prova Es de prova\r\nEs de prova Es de prova Es de prova\r\nEs de prova Es de prova Es'),
+(1, 2, 1, 4, '2016-05-13 15:57:37', NULL, NULL),
 (2, 2, 2, 4, '2016-05-13 15:57:37', NULL, 'justifica'),
-(3, 2, 3, 5, '2016-05-13 15:57:37', NULL, 'ieeeeeee'),
-(4, 2, 4, 4, '2016-05-13 15:57:37', NULL, 'nothing'),
-(5, 2, 4, 5, '2016-05-13 15:57:37', NULL, 'There''s no justification for this'),
-(6, 2, 5, 4, '2016-05-13 15:57:37', '2016-05-13 15:57:38', 'Justificando'),
-(7, 5, 6, 2, '2016-05-13 15:57:37', '2016-05-13 15:57:38', 'justificandoooo'),
-(8, 7, 7, 3, '2016-05-13 15:57:37', NULL, 'naaaaaaa'),
+(3, 2, 3, 5, '2016-05-13 15:57:37', NULL, NULL),
+(4, 2, 16, 2, '2016-05-13 15:57:37', NULL, 'falta de temps'),
+(5, 2, 4, 5, '2016-05-13 15:57:37', NULL, NULL),
+(6, 2, 5, 4, '2016-05-13 15:57:37', '2016-05-13 15:57:38', NULL),
+(7, NULL, 12, NULL, NULL, NULL, NULL),
+(8, 7, 7, 3, '2016-05-13 15:57:37', NULL, 'justificat'),
 (9, 2, 8, 4, '2016-05-13 15:57:37', NULL, NULL),
-(10, 2, 9, 4, '2016-05-13 15:57:37', NULL, 'just'),
-(11, 2, 10, 4, '2016-05-13 15:57:37', NULL, 'Finish');
+(10, 5, 9, 2, '2016-05-13 15:57:37', NULL, 'no funciona el robot'),
+(11, 2, 10, 4, '2016-05-13 15:57:37', '2016-05-20 22:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -246,13 +227,11 @@ INSERT INTO `tasks` (`id`, `id_team`, `id_order`, `id_worker`, `date_assignation
 -- Estructura de tabla para la tabla `teams`
 --
 
-CREATE TABLE IF NOT EXISTS `teams` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `teams` (
+  `id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
-  `name` char(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+  `name` char(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `teams`
@@ -272,8 +251,8 @@ INSERT INTO `teams` (`id`, `code`, `name`) VALUES
 -- Estructura de tabla para la tabla `workers`
 --
 
-CREATE TABLE IF NOT EXISTS `workers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `workers` (
+  `id` int(11) NOT NULL,
   `username` char(50) NOT NULL,
   `password` char(40) NOT NULL,
   `NIF` char(9) NOT NULL,
@@ -283,11 +262,8 @@ CREATE TABLE IF NOT EXISTS `workers` (
   `telephone` int(9) DEFAULT NULL,
   `category` char(50) NOT NULL,
   `id_team` int(11) DEFAULT NULL,
-  `is_admin` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `id_team` (`id_team`),
-  KEY `id_team_2` (`id_team`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+  `is_admin` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `workers`
@@ -301,6 +277,128 @@ INSERT INTO `workers` (`id`, `username`, `password`, `NIF`, `name`, `surname`, `
 (5, 'jpont', '36170a9e4828a4402c3237a116d6ae357794344f', '00000000T', 'Joan', 'Pont', 666666666, 999999999, 'DAO Designer', 2, 0);
 
 --
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `id_robot` (`id_robot`),
+  ADD KEY `id_status_order` (`id_status_order`),
+  ADD KEY `id_process` (`id_process`);
+
+--
+-- Indices de la tabla `points`
+--
+ALTER TABLE `points`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_process` (`id_process`);
+
+--
+-- Indices de la tabla `processes`
+--
+ALTER TABLE `processes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Indices de la tabla `robots`
+--
+ALTER TABLE `robots`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_current_status` (`id_current_status`);
+
+--
+-- Indices de la tabla `status_order`
+--
+ALTER TABLE `status_order`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `status_robot`
+--
+ALTER TABLE `status_robot`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tasks`
+--
+ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_team` (`id_team`),
+  ADD KEY `id_order` (`id_order`),
+  ADD KEY `id_worker` (`id_worker`),
+  ADD KEY `id_team_2` (`id_team`),
+  ADD KEY `id_order_2` (`id_order`);
+
+--
+-- Indices de la tabla `teams`
+--
+ALTER TABLE `teams`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Indices de la tabla `workers`
+--
+ALTER TABLE `workers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_team` (`id_team`),
+  ADD KEY `id_team_2` (`id_team`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+--
+-- AUTO_INCREMENT de la tabla `points`
+--
+ALTER TABLE `points`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT de la tabla `processes`
+--
+ALTER TABLE `processes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT de la tabla `robots`
+--
+ALTER TABLE `robots`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT de la tabla `status_order`
+--
+ALTER TABLE `status_order`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT de la tabla `status_robot`
+--
+ALTER TABLE `status_robot`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT de la tabla `tasks`
+--
+ALTER TABLE `tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT de la tabla `teams`
+--
+ALTER TABLE `teams`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT de la tabla `workers`
+--
+ALTER TABLE `workers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
 -- Restricciones para tablas volcadas
 --
 
@@ -309,8 +407,8 @@ INSERT INTO `workers` (`id`, `username`, `password`, `NIF`, `name`, `surname`, `
 --
 ALTER TABLE `orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`id_status_order`) REFERENCES `status_order` (`id`),
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`id_robot`) REFERENCES `robots` (`id`),
-  ADD CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`id_process`) REFERENCES `processes` (`id`);
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`id_robot`) REFERENCES `robots` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`id_process`) REFERENCES `processes` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `points`
@@ -328,15 +426,15 @@ ALTER TABLE `robots`
 -- Filtros para la tabla `tasks`
 --
 ALTER TABLE `tasks`
-  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id`),
-  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`id_team`) REFERENCES `teams` (`id`),
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`id_worker`) REFERENCES `workers` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`id_team`) REFERENCES `teams` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `tasks_ibfk_3` FOREIGN KEY (`id_order`) REFERENCES `orders` (`id`);
 
 --
 -- Filtros para la tabla `workers`
 --
 ALTER TABLE `workers`
-  ADD CONSTRAINT `workers_ibfk_1` FOREIGN KEY (`id_team`) REFERENCES `teams` (`id`);
+  ADD CONSTRAINT `workers_ibfk_1` FOREIGN KEY (`id_team`) REFERENCES `teams` (`id`) ON DELETE SET NULL;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
