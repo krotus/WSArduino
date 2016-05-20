@@ -61,6 +61,16 @@ class Order extends AbstractDAO {
 			}else{
 				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
 			}
+		}else if($request[0] == "getAllOrdersAdmin"){
+			if(self::getAllOrdersAdmin()){
+				http_response_code(200);
+				return [
+					"state" => parent::STATE_SUCCESS,
+					"message" => "Obtenim totes les ordres de admin"
+				];
+			}else{
+				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
+			}
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
