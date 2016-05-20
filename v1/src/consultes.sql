@@ -56,10 +56,10 @@ inner join teams on teams.id = workers.id_team;
 
 #2
 
-select teams.code, 
+select teams.id,
+teams.code, 
 teams.name,  
-concat(workers.name, ' ', workers.surname) as worker
-
+(select group_concat(workers.name, ' ', workers.surname) as worker from workers where workers.id_team = teams.id)
 from teams
 inner join workers on workers.id_team = teams.id
 
@@ -134,3 +134,17 @@ where teams.name = 'EquipA'
 
 #8.2
 
+#tasks consult
+
+select tasks.id,
+teams.name as team_name,
+orders.description as description_order,
+concat(workers.name, ' ', workers.surname) as worker,
+tasks.date_assignation,
+tasks.date_completion,
+tasks.justification
+
+from tasks
+join teams on teams.id = tasks.id_team
+join orders on orders.id = tasks.id_order
+join workers on workers.id = tasks.id_worker;
