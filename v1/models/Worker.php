@@ -110,6 +110,8 @@ class Worker extends AbstractDAO {
 
 	public static function update($id, $worker){
 		try{
+
+
 			//creant la consulta UPDATE
 			$db = new Database();
 			$sql = "UPDATE " . self::TABLE_NAME . 
@@ -124,7 +126,7 @@ class Worker extends AbstractDAO {
 			self::ID_TEAM . " = :id_team, " .
 			self::IS_ADMIN . " = :is_admin " .
 			"WHERE " . self::ID . " = :id";
-
+			Task::updateTaskTeam($worker->team,$id);
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":username", $worker->username);

@@ -80,7 +80,7 @@ class Order extends AbstractDAO {
 	//HTTP REQUEST DELETE
 	public static function delete($request){
 		if($request[0] == 'deleteById'){
-			return parent::deleteById($request[1]);
+			return self::deleteByIdCascade($request[1]);
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -122,6 +122,29 @@ class Order extends AbstractDAO {
 			throw new ExceptionApi(parent::STATE_ERROR_PARAMETERS, "Falta la ruta del order", 422);
 		}
 	}
+
+	public static function deleteByIdCascade($id){
+		try{
+			$db = new Database();
+			$idTask = Task::getTaskIdByIdOrder($id);
+			for ($i=0; $i < count($idTask); $i++) { 
+				Task::deleteById($idTask[$i]["id"]);
+			}
+			$sql = "DELETE FROM " . self::TABLE_NAME . " WHERE id = :id";
+			$stmt = $db->prepare($sql);
+			$result = $stmt->execute(array(':id' => $id));
+			if($result){
+				return self::STATE_CREATE_SUCCESS;
+			}else{
+				return self::STATE_CREATE_FAIL;
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+
+
 
 public static function getAllOrdersAdmin(){
 		try{ 
