@@ -12,6 +12,7 @@ class Robot  extends AbstractDAO {
 	const LATITUDE = "latitude";
 	const LONGITUDE = "longitude";
 	const ID_CURRENT_STATUS = "id_current_status";
+	const IP_CAM = "ip_cam";
 
 //HTTP REQUEST GET
 	public static function get($request){
@@ -126,6 +127,7 @@ class Robot  extends AbstractDAO {
 		$latitude = $robot->latitude;
 		$longitude = $robot->longitude;
 		$idCurrentStatus = $robot->statusRobot;
+		$ipCam = $robot->ipCam;
 		try{
 			$db = new Database();
 			$sql = "INSERT INTO " . self::TABLE_NAME . " ( " .
@@ -134,8 +136,9 @@ class Robot  extends AbstractDAO {
 			self::IP_ADDRESS . "," .
 			self::LATITUDE . "," .
 			self::LONGITUDE . "," .
-			self::ID_CURRENT_STATUS . ")" .
-			" VALUES(:code,:name,:ip_address,:latitude,:longitude,:id_current_status)";
+			self::ID_CURRENT_STATUS . "," .
+			self::IP_CAM . ")" .
+			" VALUES(:code,:name,:ip_address,:latitude,:longitude,:id_current_status,:ip_cam)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":code", $code);
@@ -144,6 +147,7 @@ class Robot  extends AbstractDAO {
 			$stmt->bindParam(":latitude", $latitude);
 			$stmt->bindParam(":longitude", $longitude);
 			$stmt->bindParam(":id_current_status", $idCurrentStatus);
+			$stmt->bindParam(":ip_cam", $ipCam);
 
 			$result = $stmt->execute();
 
