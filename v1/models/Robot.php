@@ -171,7 +171,7 @@ class Robot  extends AbstractDAO {
 			self::IP_ADDRESS . " = :ip_address," .
 			self::LATITUDE . " = :latitude," .
 			self::LONGITUDE . " = :longitude," .
-			self::ID_CURRENT_STATUS . " = :id_current_status " .
+			self::ID_CURRENT_STATUS . " = :id_current_status," .
 			self::IP_CAM . " = :ip_cam " .
 			"WHERE " . self::ID . " = :id";
 
