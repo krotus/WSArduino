@@ -172,6 +172,7 @@ class Robot  extends AbstractDAO {
 			self::LATITUDE . " = :latitude," .
 			self::LONGITUDE . " = :longitude," .
 			self::ID_CURRENT_STATUS . " = :id_current_status " .
+			self::IP_CAM . " = :ip_cam " .
 			"WHERE " . self::ID . " = :id";
 
 			//prerarem la sentencia
@@ -182,6 +183,7 @@ class Robot  extends AbstractDAO {
 			$stmt->bindParam(":latitude", $robot->latitude);
 			$stmt->bindParam(":longitude", $robot->longitude);
 			$stmt->bindParam(":id_current_status", $robot->statusRobot);
+			$stmt->bindParam(":ip_cam", $robot->ipCam);
 			$stmt->bindParam(":id", $id);
 
 			$stmt->execute();
