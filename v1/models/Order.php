@@ -283,8 +283,10 @@ public static function getAllOrdersAdmin(){
 
 			$stmt->execute();
 			Task::updateOrderTaskExecute($idWorker, $idOrder);
+			$idStatusRobot = 3; //busy
+			Robot::updateStatus($idRobot, $idStatusRobot);
 
-			return $stmt->rowCount();
+			return $stmt->rowCount($idOrder);
 		}catch(PDOException $e){
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
@@ -310,6 +312,9 @@ public static function getAllOrdersAdmin(){
 					Task::updateTaskCancelled($idOrder,$extraData);
 				}
 			}
+			$idStatusRobot = 1; //online
+			Robot::updateStatus($idRobot, $idStatusRobot);
+
 			return $stmt->rowCount();
 		}catch(PDOException $e){
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());

@@ -76,11 +76,22 @@ class Robot  extends AbstractDAO {
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
 				}
 			}else if($route == "updateIp"){
-				if(parent::updateIP($idRobot, $robot) > 0){
+				if(self::updateIP($idRobot, $robot) > 0){
 					http_response_code(200);
 					return [
 					"state" => parent::STATE_SUCCESS,
 					"message" => "Actualització IP del robot existosa"
+					];
+				}else{
+					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
+				}
+			}else if($route == "updateStatus"){
+				$idStatus = $request[2];
+				if(self::updateIP($idRobot, $idStatus) > 0){
+					http_response_code(200);
+					return [
+					"state" => parent::STATE_SUCCESS,
+					"message" => "Actualització estat del robot existosa"
 					];
 				}else{
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
@@ -205,6 +216,27 @@ class Robot  extends AbstractDAO {
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":ip_address", $robot->ipAddress);
+			$stmt->bindParam(":id", $id);
+
+			$stmt->execute();
+
+			return $stmt->rowCount();
+		}catch(PDOException $e){
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
+
+	public static function updateStatus($idRobot, $idStatus){
+		try{
+			//creant la consulta UPDATE
+			$db = new Database();
+			$sql = "UPDATE " . self::TABLE_NAME . 
+			" SET " . self::ID_CURRENT_STATUS . " = :id_current_status " .
+			"WHERE " . self::ID . " = :id";
+
+			//prerarem la sentencia
+			$stmt = $db->prepare($sql);
+			$stmt->bindParam(":id_current_status", $idStatus);
 			$stmt->bindParam(":id", $id);
 
 			$stmt->execute();
