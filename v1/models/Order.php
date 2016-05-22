@@ -27,7 +27,8 @@ class Order extends AbstractDAO {
 		}else if($request[0] == 'completedByTask'){
 			$idOrder = $request[1];
 			$idStatusOrder = $request[2];
-			if(self::completedByTask($idOrder, $idStatusOrder) > 0){
+			$idRobot = $request[3];
+			if(self::completedByTask($idOrder, $idStatusOrder, $idRobot) > 0){
 				http_response_code(200);
 				return [
 					"state" => parent::STATE_SUCCESS,
