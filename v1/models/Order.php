@@ -52,7 +52,8 @@ class Order extends AbstractDAO {
 			$idOrder = $request[1];
 			$idStatusOrder = $request[2];
 			$idWorker = $request[3];
-			if(self::executeByWorker($idOrder, $idStatusOrder, $idWorker) > 0){
+			$idRobot = $request[4];
+			if(self::executeByWorker($idOrder, $idStatusOrder, $idWorker, $idRobot) > 0){
 				http_response_code(200);
 				return [
 					"state" => parent::STATE_SUCCESS,
@@ -114,7 +115,8 @@ class Order extends AbstractDAO {
 			}else if($route == "updateExecute"){
 				$idStatusOrder = $request[2];
 				$idWorker = $request[3];
-				if(self::executeByWorker($idOrder, $idStatusOrder, $idWorker) > 0){
+				$idRobot = $request[4];
+				if(self::executeByWorker($idOrder, $idStatusOrder, $idWorker, $idRobot) > 0){
 					http_response_code(200);
 					return [
 						"state" => parent::STATE_SUCCESS,
@@ -268,7 +270,7 @@ public static function getAllOrdersAdmin(){
 		}
 	}
 
-	public static function executeByWorker($idOrder, $idStatus, $idWorker){
+	public static function executeByWorker($idOrder, $idStatus, $idWorker, $idRobot){
 		try{
 			//creant la consulta GET pero hauria de ser UPDATE
 			$db = new Database();
