@@ -86,8 +86,9 @@ class Robot  extends AbstractDAO {
 					throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El robot que intentes accedir no existeix",404);
 				}
 			}else if($route == "updateStatus"){
+				$codeRobot = $request[1]; 
 				$idStatus = $request[2];
-				if(self::updateIP($idRobot, $idStatus) > 0){
+				if(self::updateIP($codeRobot, $idStatus) > 0){
 					http_response_code(200);
 					return [
 					"state" => parent::STATE_SUCCESS,
@@ -226,18 +227,18 @@ class Robot  extends AbstractDAO {
 		}
 	}
 
-	public static function updateStatus($idRobot, $idStatus){
+	public static function updateStatus($codeRobot, $idStatus){
 		try{
 			//creant la consulta UPDATE
 			$db = new Database();
 			$sql = "UPDATE " . self::TABLE_NAME . 
 			" SET " . self::ID_CURRENT_STATUS . " = :id_current_status " .
-			"WHERE " . self::ID . " = :id";
+			"WHERE " . self::CODE . " = :code";
 
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":id_current_status", $idStatus);
-			$stmt->bindParam(":id", $id);
+			$stmt->bindParam(":code", $codeRobot);
 
 			$stmt->execute();
 
