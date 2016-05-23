@@ -95,7 +95,7 @@ class Task extends AbstractDAO {
 			from " . self::TABLE_NAME . "
 			 inner join teams on teams.id = ". self::TABLE_NAME ."." . self::ID_TEAM .
 			 " inner join orders on orders.id = ". self::TABLE_NAME ."." . self::ID_ORDER .
-			 " inner join workers on workers.id = ". self::TABLE_NAME ."." . self::ID_WORKER .";";
+			 " left join workers on workers.id = ". self::TABLE_NAME ."." . self::ID_WORKER .";";
 			$stmt = $db->prepare($sql);
 		    $result = $stmt->execute();
 
