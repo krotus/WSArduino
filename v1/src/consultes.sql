@@ -152,3 +152,21 @@ where tasks.id_team is not null and orders.id_status_order = 3
 and (tasks.date_completion between '01/01/2016' and '31/12/2016' or tasks.date_completion is not null)
 group by tasks.id_team
 
+# Consulta amb taules temporals estadistiques
+
+drop table if exists a00;
+create temporary table a00 as
+select teams.name, teams.id from teams;
+
+drop table if exists a01;
+create temporary table a01 as
+select count(*) as tasks_done, tasks.id_team from orders
+left join tasks on orders.id = tasks.id_order
+where orders.id_status_order = 3
+and (tasks.date_completion between '2016-05-23 12:59:59' and '2016-05-23 12:59:59' and tasks.date_completion is not null)
+group by tasks.id_team;
+
+
+select a00.name, if(a01.tasks_done is null, 0, a01.tasks_done) as tasks_done
+from a00
+left join a01 on a00.id = a01.id_team;
