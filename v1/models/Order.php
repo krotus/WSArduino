@@ -357,16 +357,25 @@ public static function getAllOrdersAdmin(){
 	public static function stadisticsTeam($startDate,$endDate) {
 		try {
 			$db = new Database();
-			$sql = "select teams.name as team,count(tasks.id_team) as tasks_done
-					from tasks
-					join " . self::TABLE_NAME ." on " . self::TABLE_NAME ."." . self::ID . " = tasks.id_order
-					left join teams on teams.id = tasks.id_team
-					where tasks.id_team is not null and " . self::TABLE_NAME .".id_status_order = 3
-					and (tasks.date_completion between :startDate and :endDate or tasks.date_completion is not null)
-					group by tasks.id_team";
+			$sql = "drop table if exists a00;
+					create temporary table a00 as
+					select teams.name, teams.id from teams;
+
+					drop table if exists a01;
+					create temporary table a01 as
+					select count(*) as tasks_done, tasks.id_team from orders
+					left join tasks on orders.id = tasks.id_order
+					where orders.id_status_order = 3
+					and (tasks.date_completion between :start_date and :end_date and tasks.date_completion is not null)
+					group by tasks.id_team;
+
+
+					select a00.name, if(a01.tasks_done is null, 0, a01.tasks_done) as tasks_done
+					from a00
+					left join a01 on a00.id = a01.id_team;";
 					$stmt = $db->prepare($sql);
-					$stmt->bindParam(":startDate", $startDate);
-					$stmt->bindParam(":endDate", $endDate);
+					$stmt->bindParam(":start_date", $startDate);
+					$stmt->bindParam(":end_date", $endDate);
 					$result = $stmt->execute();
 					if($result){
 						http_response_code(200);
@@ -386,17 +395,25 @@ public static function getAllOrdersAdmin(){
 	public static function stadisticsWorker($startDate,$endDate) {
 		try {
 			$db = new Database();
-			$sql = "select concat(workers.name,' ',workers.surname) as worker,
-					count(tasks.id_worker) as tasks_done
-					from tasks
-					join ". self::TABLE_NAME ." on ". self::TABLE_NAME .".". self::ID ." = tasks.id_order
-					left join workers on workers.id = tasks.id_worker
-					where tasks.id_worker is not null and ". self::TABLE_NAME ."." . self::ID_STATUS_ORDER . " = 3
-					and (tasks.date_completion between :startDate and :endDate or tasks.date_completion is not null)
-					group by tasks.id_worker";
+			$sql = "drop table if exists a00;
+					create temporary table a00 as
+					select workers.name, workers.surname, workers.id from workers;
+
+					drop table if exists a01;
+					create temporary table a01 as
+					select count(*) as tasks_done, tasks.id_team from orders
+					left join tasks on orders.id = tasks.id_order
+					where orders.id_status_order = 3
+					and (tasks.date_completion between :start_date and :end_date and tasks.date_completion is not null)
+					group by tasks.id_team;
+
+
+					select concat(a00.name, ' ',a00.surname) as worker, if(a01.tasks_done is null, 0, a01.tasks_done) as tasks_done
+					from a00
+					left join a01 on a00.id = a01.id_team;";
 					$stmt = $db->prepare($sql);
-					$stmt->bindParam(":startDate", $startDate);
-					$stmt->bindParam(":endDate", $endDate);
+					$stmt->bindParam(":start_date", $startDate);
+					$stmt->bindParam(":end_date", $endDate);
 					$result = $stmt->execute();
 					if($result){
 						http_response_code(200);
