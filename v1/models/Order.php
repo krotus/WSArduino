@@ -79,9 +79,7 @@ class Order extends AbstractDAO {
 		if($request[0] == 'create'){
 			return parent::create();
 		} else if ($request[0] == 'stadistics') {
-			$body = file_get_contents('php://input');
-			$filter = json_decode($body);
-			return self::stadistics($filter);
+			return self::stadistics();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -345,10 +343,10 @@ public static function getAllOrdersAdmin(){
 		}
 	}
 
-	public static function stadistics($filter) {
-		$startDate = $filter->startDate;
-		$endDate = $filter->endDate;
-		$isTeam = $filter->isTeam;
+	public static function stadistics() {
+		$startDate = $_POST['startDate'];
+		$endDate =$_POST['endDate'];
+		$isTeam = $_POST['isTeam'];
 		if ($isTeam == 0) {
 			return self::stadisticsWorker($startDate,$endDate);
 		} else if ($isTeam == 1) {
