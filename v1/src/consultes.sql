@@ -190,3 +190,8 @@ from a00
 left join a01 on a00.id = a01.id_worker;
 
 # dashboard select robots and status
+
+select st.description, count(*) as robots_qnt
+from robots as r
+inner join status_robot as st on r.id_current_status = st.id
+group by st.id
