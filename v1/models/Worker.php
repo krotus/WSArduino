@@ -191,7 +191,7 @@ class Worker extends AbstractDAO {
 			$stmt->bindParam(":category", $category);
 			$stmt->bindParam(":id_team", $idTeam);
 			$stmt->bindParam(":is_admin", $isAdmin);
-			$language = 'es';
+			$language = 1; //es
 			$stmt->bindParam(":is_admin", $language);
 
 			$result = $stmt->execute();

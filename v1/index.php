@@ -4,6 +4,7 @@ require("utilities/Database.php");
 require("views/ViewJson.php");
 require("views/ViewXML.php");
 require("models/AbstractDAO.php");
+require("models/Language.php");
 require("models/Order.php");
 require("models/Point.php");
 require("models/Worker.php");
@@ -23,7 +24,7 @@ $db = new Database();
 // Obtenim el recurs a partir de la petició
 $request = explode("/", $_GET['PATH_INFO']);
 $resource = array_shift($request);
-$existing_resources = array('orders','points','processes','robots','status_order','status_robot','tasks','teams','workers');
+$existing_resources = array('orders','points','processes','robots','status_order','status_robot','tasks','teams','workers','languages');
 
 // COmprovem si existeix el recurs especificat
 if(!in_array($resource, $existing_resources)){
@@ -74,6 +75,8 @@ switch ($method) {
 			echo $view->prints(StatusOrder::get($request));
 		}else if($resource == "status_robot") {
 			echo $view->prints(StatusRobot::get($request));
+		}else if($resource == "languages") {
+			echo $view->prints(Language::get($request));
 		}
 	break;
 	case 'post':
