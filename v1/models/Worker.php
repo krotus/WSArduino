@@ -125,7 +125,7 @@ class Worker extends AbstractDAO {
 			self::TELEPHONE . " = :telephone, " .
 			self::CATEGORY . " = :category, " .
 			self::ID_TEAM . " = :id_team, " .
-			self::IS_ADMIN . " = :is_admin " .
+			self::IS_ADMIN . " = :is_admin," .
 			self::LANGUAGE . " = :language " .
 			"WHERE " . self::ID . " = :id";
 			Task::updateTaskTeam($worker->team,$id);
