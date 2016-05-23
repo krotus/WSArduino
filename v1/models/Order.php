@@ -439,7 +439,10 @@ public static function getAllOrdersAdmin(){
 	public static function stadisticsRobots() {
 		try{ 
 			$db = new Database();
-			$sql = "SELECT * FROM " . static::TABLE_NAME;
+			$sql = "select st.description as robots_dsc, count(*) as robots_qnt
+					from robots as r
+					inner join status_robot as st on r.id_current_status = st.id
+					group by st.id";
 			$stmt = $db->prepare($sql);
 			$result = $stmt->execute();
 
