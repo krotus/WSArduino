@@ -17,6 +17,7 @@ class Worker extends AbstractDAO {
 	const CATEGORY = "category";
 	const ID_TEAM = "id_team";
 	const IS_ADMIN = "is_admin";
+	const LANGUAGE = "language";
 
 	//HTTP REQUEST GET
 	public static function get($request){
@@ -125,6 +126,7 @@ class Worker extends AbstractDAO {
 			self::CATEGORY . " = :category, " .
 			self::ID_TEAM . " = :id_team, " .
 			self::IS_ADMIN . " = :is_admin " .
+			self::LANGUAGE . " = :language " .
 			"WHERE " . self::ID . " = :id";
 			Task::updateTaskTeam($worker->team,$id);
 			//prerarem la sentencia
@@ -139,6 +141,7 @@ class Worker extends AbstractDAO {
 			$stmt->bindParam(":category", $worker->category);
 			$stmt->bindParam(":id_team", $worker->team);
 			$stmt->bindParam(":is_admin", $worker->isAdmin);
+			$stmt->bindParam(":language", $worker->language);
 			$stmt->bindParam(":id", $id);
 			$stmt->execute();
 			return $stmt->rowCount();
@@ -173,8 +176,9 @@ class Worker extends AbstractDAO {
 				self::TELEPHONE . "," .
 				self::CATEGORY . "," .
 				self::ID_TEAM . "," .
-				self::IS_ADMIN . ")" .
-				" VALUES(:username,:password,:NIF,:name,:surname,:mobile,:telephone,:category,:id_team,:is_admin)";
+				self::IS_ADMIN . "," .
+				self::LANGUAGE . ")" .
+				" VALUES(:username,:password,:NIF,:name,:surname,:mobile,:telephone,:category,:id_team,:is_admin,:language)";
 
 			$stmt = $db->prepare($sql);
 			$stmt->bindParam(":username", $username);
@@ -187,6 +191,8 @@ class Worker extends AbstractDAO {
 			$stmt->bindParam(":category", $category);
 			$stmt->bindParam(":id_team", $idTeam);
 			$stmt->bindParam(":is_admin", $isAdmin);
+			$language = 'es';
+			$stmt->bindParam(":is_admin", $language);
 
 			$result = $stmt->execute();
 
