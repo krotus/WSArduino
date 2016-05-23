@@ -74,7 +74,7 @@ class Order extends AbstractDAO {
 		}
 	}
 
-	//HTTP REQUEST GET
+	//HTTP REQUEST POST
 	public static function post($request){
 		if($request[0] == 'create'){
 			return parent::create();
@@ -356,7 +356,7 @@ public static function getAllOrdersAdmin(){
 		} 
 	}
 
-	public function stadisticsTeam($startDate,$endDate) {
+	public static function stadisticsTeam($startDate,$endDate) {
 		try {
 			$db = new Database();
 			$sql = "select teams.name as team,count(tasks.id_team) as tasks_done
@@ -385,7 +385,7 @@ public static function getAllOrdersAdmin(){
 	}
 
 
-	public function stadisticsWorker($startDate,$endDate) {
+	public static function stadisticsWorker($startDate,$endDate) {
 		try {
 			$db = new Database();
 			$sql = "select concat(workers.name,' ',workers.surname) as worker,
