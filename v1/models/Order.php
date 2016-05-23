@@ -69,6 +69,8 @@ class Order extends AbstractDAO {
 			}else{
 				throw new ExceptionApi(parent::STATE_URL_INCORRECT, "El order que intentes accedir no existeix",404);
 			}
+		} else if ($request[0] == 'stadisticsRobots') {
+			return self::stadisticsRobots();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -433,6 +435,27 @@ public static function getAllOrdersAdmin(){
 		}
 	}
 
+
+	public static function stadisticsRobots() {
+		try{ 
+			$db = new Database();
+			$sql = "SELECT * FROM " . static::TABLE_NAME;
+			$stmt = $db->prepare($sql);
+			$result = $stmt->execute();
+
+			if($result){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 
 	
 	public static function getByIdArduino($id){
