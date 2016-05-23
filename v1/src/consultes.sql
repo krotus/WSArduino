@@ -119,16 +119,15 @@ status_order.description as status_order_description
 from orders
 join processes on processes.id = orders.id_process
 join robots on robots.id = orders.id_robot 
-	and (robots.name like 'First Robot' or robots.code = 100) 
 join status_order on status_order.id = orders.id_status_order 
 	and status_order.description = 'pending'
 left join tasks on tasks.id_order = orders.id
 left join workers on workers.id = tasks.id_worker
 left join teams on teams.id = tasks.id_team
 
-where teams.name = 'EquipA' 
-	and (workers.name = 'Andreu' or workers.surname = 'Andreu' or 'Andreu' = '')
-	and orders.date between date_format(curdate(),'%Y-01-01') and curdate();
+where (teams.id = 3 or 3 = 0)
+	and (workers.id = 0 or 0 = 0)
+	and orders.date between date_format(curdate(),'%Y-01-01') and cast(concat(curdate(), ' 23:59:59') as datetime);
 
 #8.2
 
@@ -152,7 +151,7 @@ where tasks.id_team is not null and orders.id_status_order = 3
 and (tasks.date_completion between '01/01/2016' and '31/12/2016' or tasks.date_completion is not null)
 group by tasks.id_team
 
-# Consulta amb taules temporals estadistiques
+# Consulta amb taules temporals estadistiques teams
 
 drop table if exists a00;
 create temporary table a00 as
@@ -170,3 +169,24 @@ group by tasks.id_team;
 select a00.name, if(a01.tasks_done is null, 0, a01.tasks_done) as tasks_done
 from a00
 left join a01 on a00.id = a01.id_team;
+
+# Consulta amb taules temporals estadistiques workers
+
+drop table if exists a00;
+create temporary table a00 as
+select concat(workers.name, ' ', workers.surname) as worker, workers.id from workers;
+
+drop table if exists a01;
+create temporary table a01 as
+select count(*) as tasks_done, tasks.id_worker from orders
+left join tasks on orders.id = tasks.id_order
+where orders.id_status_order = 3
+and (tasks.date_completion between '2016-01-23 12:59:59' and '2016-06-23 12:59:59' and tasks.date_completion is not null)
+group by tasks.id_worker;
+
+
+select a00.worker, if(a01.tasks_done is null, 0, a01.tasks_done) as tasks_done
+from a00
+left join a01 on a00.id = a01.id_worker;
+
+# dashboard select robots and status
