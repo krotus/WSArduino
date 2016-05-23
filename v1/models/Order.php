@@ -79,9 +79,7 @@ class Order extends AbstractDAO {
 		if($request[0] == 'create'){
 			return parent::create();
 		} else if ($request[0] == 'stadistics') {
-			$body = file_get_contents('php://input');
-			$filter = json_decode($body);
-			return self::stadistics($filter);
+			return self::stadistics();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -345,10 +343,11 @@ public static function getAllOrdersAdmin(){
 		}
 	}
 
-	public static function stadistics($filter) {
-		$startDate = $filter->startDate;
-		$endDate = $filter->endDate;
-		$isTeam = $filter->isTeam;
+	public static function stadistics() {
+		$startDate = $_POST['startDate'];
+		$endDate =$_POST['endDate'];
+		$isTeam = $_POST['isTeam'];
+		
 		if ($isTeam == 0) {
 			return self::stadisticsWorker($startDate,$endDate);
 		} else if ($isTeam == 1) {
@@ -359,26 +358,36 @@ public static function getAllOrdersAdmin(){
 	public static function stadisticsTeam($startDate,$endDate) {
 		try {
 			$db = new Database();
-			$sql = "select teams.name as team,count(tasks.id_team) as tasks_done
-					from tasks
-					join " . self::TABLE_NAME ." on " . self::TABLE_NAME ."." . self::ID . " = tasks.id_order
-					left join teams on teams.id = tasks.id_team
-					where tasks.id_team is not null and " . self::TABLE_NAME .".id_status_order = 3
-					and (tasks.date_completion between :startDate and :endDate or tasks.date_completion is not null)
-					group by tasks.id_team";
-					$stmt = $db->prepare($sql);
-					$stmt->bindParam(":startDate", $startDate);
-					$stmt->bindParam(":endDate", $endDate);
-					$result = $stmt->execute();
-					if($result){
-						http_response_code(200);
-						return [
-							"state" => self::STATE_SUCCESS,
-							"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
-						];
-					}else{
-						throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
-					}
+			$sql1 = "create temporary table a00 as
+					select teams.name, teams.id from teams;";
+			$stmt1 = $db->prepare($sql1);
+			$result = $stmt1->execute();
+
+			$sql2 = "create temporary table a01 as
+					select count(*) as tasks_done, tasks.id_team from orders
+					left join tasks on orders.id = tasks.id_order
+					where orders.id_status_order = 3
+					and (tasks.date_completion between :start_date and :end_date and tasks.date_completion is not null)
+					group by tasks.id_team;";
+			$stmt2 = $db->prepare($sql2);
+			$stmt2->bindParam(":start_date", $startDate);
+			$stmt2->bindParam(":end_date", $endDate);
+			$result = $stmt2->execute();
+
+			$sql3 =	"select a00.name, if(a01.tasks_done is null, 0, a01.tasks_done) as tasks_done
+					from a00 left join a01 on a01.id_team = a00.id;";
+			$stmt3 = $db->prepare($sql3);
+			$result = $stmt3->execute();
+			
+			if($result){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt3->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
 		} catch (PDOException $e) {
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
@@ -388,27 +397,37 @@ public static function getAllOrdersAdmin(){
 	public static function stadisticsWorker($startDate,$endDate) {
 		try {
 			$db = new Database();
-			$sql = "select concat(workers.name,' ',workers.surname) as worker,
-					count(tasks.id_worker) as tasks_done
-					from tasks
-					join ". self::TABLE_NAME ." on ". self::TABLE_NAME .".". self::ID ." = tasks.id_order
-					left join workers on workers.id = tasks.id_worker
-					where tasks.id_worker is not null and ". self::TABLE_NAME ."." . self::ID_STATUS_ORDER . " = 3
-					and (tasks.date_completion between :startDate and :endDate or tasks.date_completion is not null)
-					group by tasks.id_worker";
-					$stmt = $db->prepare($sql);
-					$stmt->bindParam(":startDate", $startDate);
-					$stmt->bindParam(":endDate", $endDate);
-					$result = $stmt->execute();
-					if($result){
-						http_response_code(200);
-						return [
-							"state" => self::STATE_SUCCESS,
-							"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
-						];
-					}else{
-						throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
-					}
+			$sql1 = "create temporary table a00 as
+					select concat(workers.name, ' ', workers.surname) as worker, workers.id from workers;";
+			$stmt1 = $db->prepare($sql1);
+			$result = $stmt1->execute();
+			$sql2 = "create temporary table a01 as
+					select count(*) as tasks_done, tasks.id_worker from orders
+					left join tasks on orders.id = tasks.id_order
+					where orders.id_status_order = 3
+					and (tasks.date_completion between :start_date and :end_date and tasks.date_completion is not null)
+					group by tasks.id_worker;";
+			$stmt2 = $db->prepare($sql2);
+
+			$stmt2->bindParam(":start_date", $startDate);
+			$stmt2->bindParam(":end_date", $endDate);
+			$result = $stmt2->execute();
+
+			$sql3 =	"select a00.worker, if(a01.tasks_done is null, 0, a01.tasks_done) as tasks_done
+					from a00
+					left join a01 on a00.id = a01.id_worker;";
+			$stmt3 = $db->prepare($sql3);
+			$result = $stmt3->execute();
+			
+			if($result){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt3->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
 		} catch (PDOException $e) {
 			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
