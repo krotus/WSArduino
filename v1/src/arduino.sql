@@ -130,7 +130,8 @@ CREATE TABLE `robots` (
   `ip_address` char(20) DEFAULT NULL,
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
-  `id_current_status` int(11) NOT NULL
+  `id_current_status` int(11) NOT NULL,
+  `ip_cam` char(20) DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
