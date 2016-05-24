@@ -465,13 +465,12 @@ public static function getAllOrdersAdmin(){
 	public static function stadisticsOrders() {
 		$body = file_get_contents('php://input');
 		$filter = json_decode($body);
-		$filter = $filter->arrayParams;
-
-		$startDate = $filter[0];
-		$endDate =$filter[1];
-		$idTeam = $filter[2];
-		$idWorker = $filter[3];
-		$idStatusOrder = $filter[4];
+		
+		$startDate = $filter->strDate;
+		$endDate = $filter->endDate;
+		$idTeam = $filter->idTeam;
+		$idWorker = $filter->idWorker;
+		$idStatusOrder = $filter->idStatus;
 		
 		try{ 
 			$db = new Database();
