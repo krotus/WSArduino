@@ -467,6 +467,7 @@ public static function getAllOrdersAdmin(){
 		$endDate =$_POST['endDate'];
 		$idTeam = $_POST['idTeam'];
 		$idWorker = $_POST['idWorker'];
+		$idStatusOrder = $_POST['idStatusOrder'];
 		
 		try{ 
 			$db = new Database();
@@ -486,7 +487,7 @@ public static function getAllOrdersAdmin(){
 					join processes on processes.id = orders.id_process
 					join robots on robots.id = orders.id_robot 
 					join status_order on status_order.id = orders.id_status_order 
-						and status_order.description = 'pending'
+						and status_order.id = :id_status_order 
 					left join tasks on tasks.id_order = orders.id
 					left join workers on workers.id = tasks.id_worker
 					left join teams on teams.id = tasks.id_team
@@ -500,6 +501,7 @@ public static function getAllOrdersAdmin(){
 			$stmt->bindParam(":end_date", $endDate);
 			$stmt->bindParam(":id_team", $idTeam);
 			$stmt->bindParam(":id_worker", $idWorker);
+			$stmt->bindParam(":id_status_order", $idStatusOrder);
 
 			$result = $stmt->execute();
 
@@ -561,7 +563,7 @@ public static function getAllOrdersAdmin(){
 	{
 		try{ 
 			$db = new Database();
-			$sql = "SELECT DISTINCT o.id, o.code as code_ord, o.description as desc_ord, o.priority, o.date, o.quantity, r.code as code_robot, r.name, sr.description as desc_sr
+			$sql = "SELECT DISTINCT o.id, o.code as code_ord, o.description as desc_ord, o.priority, o.date, o.quantity, r.code as code_robot, r.name, sr.description as desc_sr, r.ip_address as ip_robot 
 FROM ". self::TABLE_NAME ." as o INNER JOIN status_order as so on o.id_status_order = so.id 
 INNER JOIN robots as r on id_robot = r.id
 INNER JOIN status_robot as sr on r.id_current_status = sr.id
