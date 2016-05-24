@@ -82,6 +82,8 @@ class Order extends AbstractDAO {
 			return parent::create();
 		} else if ($request[0] == 'stadistics') {
 			return self::stadistics();
+		}else if ($request[0] == 'stadisticsOrders') {
+			return self::stadisticsOrders();
 		}else{
 			throw new ExceptionApi(parent::STATE_URL_INCORRECT, "Url mal formada", 400);
 		}
@@ -460,6 +462,60 @@ public static function getAllOrdersAdmin(){
 		}
 	}
 
+	public static function stadisticsOrders() {
+		$startDate = $_POST['startDate'];
+		$endDate =$_POST['endDate'];
+		$idTeam = $_POST['idTeam'];
+		$idWorker = $_POST['idWorker'];
+		
+		try{ 
+			$db = new Database();
+			$sql = "select concat(workers.name, workers.surname) as workers_user,
+					teams.name as team_name,
+					orders.code as order_code,
+					orders.description as order_description,
+					orders.priority as order_priority,
+					orders.date as order_date,
+					processes.description as process_description,
+					orders.quantity as order_quantity,
+					robots.name as robot_name,
+					robots.code as robot_code,
+					status_order.description as status_order_description
+
+					from orders
+					join processes on processes.id = orders.id_process
+					join robots on robots.id = orders.id_robot 
+					join status_order on status_order.id = orders.id_status_order 
+						and status_order.description = 'pending'
+					left join tasks on tasks.id_order = orders.id
+					left join workers on workers.id = tasks.id_worker
+					left join teams on teams.id = tasks.id_team
+
+					where (teams.id = :id_team or :id_team = 0)
+						and (workers.id = :id_worker or :id_worker = 0)
+						and orders.date between :startDate and :endDate as datetime);";
+			$stmt = $db->prepare($sql);
+
+			$stmt->bindParam(":start_date", $startDate);
+			$stmt->bindParam(":end_date", $endDate);
+			$stmt->bindParam(":id_team", $idTeam);
+			$stmt->bindParam(":id_worker", $idWorker);
+
+			$result = $stmt->execute();
+
+			if($result){
+				http_response_code(200);
+				return [
+					"state" => self::STATE_SUCCESS,
+					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
+				];
+			}else{
+				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+			}
+		}catch(PDOException $e){
+			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+		}
+	}
 	
 	public static function getByIdArduino($id){
 		try{
