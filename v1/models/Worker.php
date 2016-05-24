@@ -17,7 +17,7 @@ class Worker extends AbstractDAO {
 	const CATEGORY = "category";
 	const ID_TEAM = "id_team";
 	const IS_ADMIN = "is_admin";
-	const LANGUAGE = "language";
+	const LANGUAGE = "id_language";
 
 	//HTTP REQUEST GET
 	public static function get($request){
@@ -125,12 +125,13 @@ class Worker extends AbstractDAO {
 			self::TELEPHONE . " = :telephone, " .
 			self::CATEGORY . " = :category, " .
 			self::ID_TEAM . " = :id_team, " .
-			self::IS_ADMIN . " = :is_admin," .
+			self::IS_ADMIN . " = :is_admin, " .
 			self::LANGUAGE . " = :language " .
 			"WHERE " . self::ID . " = :id";
 			Task::updateTaskTeam($worker->team,$id);
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
+			var_dump($sql);
 			$stmt->bindParam(":username", $worker->username);
 			$stmt->bindParam(":password", $worker->password);
 			$stmt->bindParam(":nif", $worker->nif);
