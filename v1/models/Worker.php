@@ -131,7 +131,6 @@ class Worker extends AbstractDAO {
 			Task::updateTaskTeam($worker->team,$id);
 			//prerarem la sentencia
 			$stmt = $db->prepare($sql);
-			var_dump($sql);
 			$stmt->bindParam(":username", $worker->username);
 			$stmt->bindParam(":password", $worker->password);
 			$stmt->bindParam(":nif", $worker->nif);
