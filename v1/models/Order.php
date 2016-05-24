@@ -463,11 +463,12 @@ public static function getAllOrdersAdmin(){
 	}
 
 	public static function stadisticsOrders() {
-		$startDate = $_POST['data'][0];
-		$endDate = $_POST['data'][1];
-		$idTeam = $_POST['data'][2];
-		$idWorker = $_POST['data'][3];
-		$idStatusOrder = $_POST['data'][4];
+		$sO = json_decode($_POST['data']);
+		$startDate = $sO[0];
+		$endDate =$sO[1];
+		$idTeam = $sO[2];
+		$idWorker = $sO[3];
+		$idStatusOrder = $sO[4];
 		
 		try{ 
 			$db = new Database();
