@@ -188,6 +188,26 @@ INSERT INTO `status_robot` (`id`, `description`) VALUES
 (2, 'offline'),
 (3, 'busy'),
 (4, 'disconnected');
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `languages`
+--
+CREATE TABLE IF NOT EXISTS `languages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` char(3) COLLATE utf8_unicode_ci NOT NULL,
+  `description` char(20) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `languages`
+--
+
+INSERT INTO `languages` (`id`, `code`, `description`) VALUES
+(1, 'es', 'Spanish'),
+(2, 'ca', 'Catalan'),
+(3, 'en', 'English');
 
 -- --------------------------------------------------------
 
@@ -264,7 +284,7 @@ CREATE TABLE `workers` (
   `category` char(50) NOT NULL,
   `id_team` int(11) DEFAULT NULL,
   `is_admin` tinyint(1) NOT NULL DEFAULT '0',
-  `language` char(3) NOT NULL
+  `language` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -272,11 +292,11 @@ CREATE TABLE `workers` (
 --
 
 INSERT INTO `workers` (`id`, `username`, `password`, `NIF`, `name`, `surname`, `mobile`, `telephone`, `category`, `id_team`, `is_admin`. `language`) VALUES
-(1, 'admin', 'a4cbb2f3933c5016da7e83fd135ab8a48b67bf61', '00000000T', 'Xavi', 'Martinez', 633720214, 938665411, 'Gerent', 2, 1, 'es'),
-(2, 'cpineda', 'bd9588a2dd400141d174e3cf824ca9e1d0e1cf0f', '00000000T', 'Carlos', 'Pineda', 666666666, 999999999, 'Frontend Designer', 5, 0, 'es'),
-(3, 'mperez', '4c5c7f6d40b54a9937607f90fa9b0a891314d161', '00000000T', 'Marc', 'Perez', 666666666, 999999999, 'Model Builder', 7, 0, 'es'),
-(4, 'asala', 'a9c5b176004f931eaeb3c9e0a36a3e80ec95e17f', '00000000T', 'Andreu', 'Sala', 666666666, 999999999, 'Framework Manager', 2, 0, 'es'),
-(5, 'jpont', '36170a9e4828a4402c3237a116d6ae357794344f', '00000000T', 'Joan', 'Pont', 666666666, 999999999, 'DAO Designer', 2, 0, 'es');
+(1, 'admin', 'a4cbb2f3933c5016da7e83fd135ab8a48b67bf61', '00000000T', 'Xavi', 'Martinez', 633720214, 938665411, 'Gerent', 2, 1, 1),
+(2, 'cpineda', 'bd9588a2dd400141d174e3cf824ca9e1d0e1cf0f', '00000000T', 'Carlos', 'Pineda', 666666666, 999999999, 'Frontend Designer', 5, 0, 1),
+(3, 'mperez', '4c5c7f6d40b54a9937607f90fa9b0a891314d161', '00000000T', 'Marc', 'Perez', 666666666, 999999999, 'Model Builder', 7, 0, 1),
+(4, 'asala', 'a9c5b176004f931eaeb3c9e0a36a3e80ec95e17f', '00000000T', 'Andreu', 'Sala', 666666666, 999999999, 'Framework Manager', 2, 0, 1),
+(5, 'jpont', '36170a9e4828a4402c3237a116d6ae357794344f', '00000000T', 'Joan', 'Pont', 666666666, 999999999, 'DAO Designer', 2, 0, 1);
 
 --
 -- Índices para tablas volcadas
