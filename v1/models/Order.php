@@ -474,7 +474,7 @@ public static function getAllOrdersAdmin(){
 		
 		try{ 
 			$db = new Database();
-			$sql = "select concat(workers.name, workers.surname) as workers_user,
+			$sql = "select concat(workers.name, ' ',workers.surname) as workers_user,
 					 teams.name as team_name,
 					 orders.code as order_code,
 					 orders.description as order_description,
