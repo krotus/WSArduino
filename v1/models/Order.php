@@ -475,31 +475,28 @@ public static function getAllOrdersAdmin(){
 		try{ 
 			$db = new Database();
 			$sql = "select concat(workers.name, workers.surname) as workers_user,
-					teams.name as team_name,
-					orders.code as order_code,
-					orders.description as order_description,
-					orders.priority as order_priority,
-					orders.date as order_date,
-					processes.description as process_description,
-					orders.quantity as order_quantity,
-					robots.name as robot_name,
-					robots.code as robot_code,
-					status_order.description as status_order_description
-
-					from orders
-					join processes on processes.id = orders.id_process
-					join robots on robots.id = orders.id_robot 
-					join status_order on status_order.id = orders.id_status_order 
-						and status_order.id = :id_status_order 
-					left join tasks on tasks.id_order = orders.id
-					left join workers on workers.id = tasks.id_worker
-					left join teams on teams.id = tasks.id_team
-
-					where (teams.id = :id_team or :id_team = 0)
-						and (workers.id = :id_worker or :id_worker = 0)
-						and orders.date between :startDate and :endDate as datetime);";
+					 teams.name as team_name,
+					 orders.code as order_code,
+					 orders.description as order_description,
+					 orders.priority as order_priority,
+					 orders.date as order_date,
+					 processes.description as process_description,
+					 orders.quantity as order_quantity,
+					 robots.name as robot_name,
+					 robots.code as robot_code,
+					 status_order.description as status_order_description 
+					 from orders 
+					 join processes on processes.id = orders.id_process 
+					 join robots on robots.id = orders.id_robot 
+					 join status_order on status_order.id = orders.id_status_order 
+					 and status_order.id = :id_status_order 
+					 left join tasks on tasks.id_order = orders.id 
+					 left join workers on workers.id = tasks.id_worker 
+					 left join teams on teams.id = tasks.id_team 
+					 where (teams.id = :id_team or :id_team = 0) 
+					 and (workers.id = :id_worker or :id_worker = 0) 
+					 and orders.date between :start_date and :end_date";
 			$stmt = $db->prepare($sql);
-
 			$stmt->bindParam(":start_date", $startDate);
 			$stmt->bindParam(":end_date", $endDate);
 			$stmt->bindParam(":id_team", $idTeam);
@@ -511,14 +508,14 @@ public static function getAllOrdersAdmin(){
 			if($result){
 				http_response_code(200);
 				return [
-					"state" => self::STATE_SUCCESS,
+					"state" => parent::STATE_SUCCESS,
 					"data"	=> $stmt->fetchAll(PDO::FETCH_ASSOC)
 				];
 			}else{
-				throw new ExceptionApi(self::STATE_ERROR, "S'ha produït un error");
+				throw new ExceptionApi(parent::STATE_ERROR, "S'ha produït un error");
 			}
 		}catch(PDOException $e){
-			throw new ExceptionApi(self::STATE_ERROR_DB, $e->getMessage());
+			throw new ExceptionApi(parent::STATE_ERROR_DB, $e->getMessage());
 		}
 	}
 	
