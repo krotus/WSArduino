@@ -16,6 +16,8 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+
+
 --
 -- Base de datos: `arduino`
 --
@@ -131,7 +133,7 @@ CREATE TABLE `robots` (
   `latitude` double NOT NULL,
   `longitude` double NOT NULL,
   `id_current_status` int(11) NOT NULL,
-  `ip_cam` char(20) DEFAULT NULL,
+  `ip_cam` char(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -291,7 +293,7 @@ CREATE TABLE `workers` (
 -- Volcado de datos para la tabla `workers`
 --
 
-INSERT INTO `workers` (`id`, `username`, `password`, `NIF`, `name`, `surname`, `mobile`, `telephone`, `category`, `id_team`, `is_admin`. `language`) VALUES
+INSERT INTO `workers` (`id`, `username`, `password`, `NIF`, `name`, `surname`, `mobile`, `telephone`, `category`, `id_team`, `is_admin`, `language`) VALUES
 (1, 'admin', 'a4cbb2f3933c5016da7e83fd135ab8a48b67bf61', '00000000T', 'Xavi', 'Martinez', 633720214, 938665411, 'Gerent', 2, 1, 1),
 (2, 'cpineda', 'bd9588a2dd400141d174e3cf824ca9e1d0e1cf0f', '00000000T', 'Carlos', 'Pineda', 666666666, 999999999, 'Frontend Designer', 5, 0, 1),
 (3, 'mperez', '4c5c7f6d40b54a9937607f90fa9b0a891314d161', '00000000T', 'Marc', 'Perez', 666666666, 999999999, 'Model Builder', 7, 0, 1),
